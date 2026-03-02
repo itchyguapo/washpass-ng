@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WashPass NG - Partner Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="partner-dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Partner Dashboard Navigation -->
+    <nav class="dashboard-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-car-side"></i>
+                <span>WashPass NG</span>
+                <span class="partner-badge">Partner</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#dashboard" class="nav-link active">Dashboard</a>
+                <a href="#wash-queue" class="nav-link">Wash Queue</a>
+                <a href="#earnings" class="nav-link">Earnings</a>
+                <a href="#analytics" class="nav-link">Analytics</a>
+                <a href="#settings" class="nav-link">Settings</a>
+            </div>
+            <div class="user-menu">
+                <div class="partner-info">
+                    <span class="partner-name">Lekki Car Wash</span>
+                    <span class="partner-id">ID: WP-2024-0892</span>
+                </div>
+                <div class="user-avatar">
+                    <img src="https://picsum.photos/seed/partner1/40/40" alt="Partner">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Partner Dashboard Content -->
+    <main class="dashboard-main">
+        <div class="container">
+            <!-- Partner Status Header -->
+            <section class="partner-header">
+                <div class="status-info">
+                    <h1>Partner Dashboard</h1>
+                    <div class="status-indicators">
+                        <div class="status-item online">
+                            <i class="fas fa-circle"></i>
+                            <span>Online</span>
+                        </div>
+                        <div class="status-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Open until 8 PM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button class="btn btn-success" onclick="toggleStatus()">
+                        <i class="fas fa-power-off"></i>
+                        Go Offline
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-qrcode"></i>
+                        Scan QR
+                    </button>
+                </div>
+            </section>
+
+            <!-- Today's Overview Stats -->
+            <section class="overview-stats">
+                <div class="stat-card large">
+                    <div class="stat-header">
+                        <div class="stat-icon green">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <span class="stat-change positive">+12.5%</span>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Today's Earnings</h3>
+                        <span class="stat-number">₦45,750</span>
+                        <p>From 18 washes</p>
+                    </div>
+                </div>
+
+                <div class="stat-card large">
+                    <div class="stat-header">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span class="stat-change positive">+8 new</span>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Customers Served</h3>
+                        <span class="stat-number">18</span>
+                        <p>12 Premium, 6 Standard</p>
+                    </div>
+                </div>
+
+                <div class="stat-card large">
+                    <div class="stat-header">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <span class="stat-change">In queue: 3</span>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Active Washes</h3>
+                        <span class="stat-number">2</span>
+                        <p>1 in progress, 1 queued</p>
+                    </div>
+                </div>
+
+                <div class="stat-card large">
+                    <div class="stat-header">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="stat-change positive">+0.2</span>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Average Rating</h3>
+                        <span class="stat-number">4.8★</span>
+                        <p>From 156 reviews</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Wash Queue & Recent Activity -->
+            <section class="dashboard-grid">
+                <div class="wash-queue">
+                    <div class="section-header">
+                        <h3>Current Wash Queue</h3>
+                        <button class="btn btn-sm btn-outline">
+                            <i class="fas fa-plus"></i>
+                            Add Manual
+                        </button>
+                    </div>
+                    <div class="queue-list">
+                        <div class="queue-item active">
+                            <div class="queue-number">#1</div>
+                            <div class="customer-info">
+                                <h4>Adebayo Johnson</h4>
+                                <p>Toyota Camry • Premium Wash</p>
+                                <div class="time-info">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Started 15 mins ago</span>
+                                </div>
+                            </div>
+                            <div class="queue-actions">
+                                <button class="btn btn-sm btn-success">
+                                    <i class="fas fa-check"></i>
+                                    Complete
+                                </button>
+                                <button class="btn btn-sm btn-outline">
+                                    <i class="fas fa-pause"></i>
+                                    Pause
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="queue-item">
+                            <div class="queue-number">#2</div>
+                            <div class="customer-info">
+                                <h4>Fatima Bello</h4>
+                                <p>Honda CR-V • Standard Wash</p>
+                                <div class="time-info">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Waiting 5 mins</span>
+                                </div>
+                            </div>
+                            <div class="queue-actions">
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fas fa-play"></i>
+                                    Start
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="queue-item">
+                            <div class="queue-number">#3</div>
+                            <div class="customer-info">
+                                <h4>Chukwuemeka Okafor</h4>
+                                <p>Mercedes C-Class • Premium Wash</p>
+                                <div class="time-info">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Just arrived</span>
+                                </div>
+                            </div>
+                            <div class="queue-actions">
+                                <button class="btn btn-sm btn-outline" disabled>
+                                    <i class="fas fa-hourglass-half"></i>
+                                    Waiting
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-washes">
+                    <div class="section-header">
+                        <h3>Recent Completed Washes</h3>
+                        <a href="#" class="view-all">View All</a>
+                    </div>
+                    <div class="washes-list">
+                        <div class="wash-item">
+                            <div class="wash-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="wash-details">
+                                <h4>Standard Wash</h4>
+                                <p>Kunle Adeyemi • BMW 3 Series</p>
+                                <span class="wash-time">10:30 AM</span>
+                            </div>
+                            <div class="wash-earnings">
+                                <span class="amount">₦2,500</span>
+                                <span class="duration">25 mins</span>
+                            </div>
+                        </div>
+
+                        <div class="wash-item">
+                            <div class="wash-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="wash-details">
+                                <h4>Premium Wash</h4>
+                                <p>Grace Nwosu • Toyota RAV4</p>
+                                <span class="wash-time">9:45 AM</span>
+                            </div>
+                            <div class="wash-earnings">
+                                <span class="amount">₦4,200</span>
+                                <span class="duration">45 mins</span>
+                            </div>
+                        </div>
+
+                        <div class="wash-item">
+                            <div class="wash-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="wash-details">
+                                <h4>Basic Wash</h4>
+                                <p>Ahmed Ibrahim • Nissan Sentra</p>
+                                <span class="wash-time">9:00 AM</span>
+                            </div>
+                            <div class="wash-earnings">
+                                <span class="amount">₦1,800</span>
+                                <span class="duration">20 mins</span>
+                            </div>
+                        </div>
+
+                        <div class="wash-item">
+                            <div class="wash-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="wash-details">
+                                <h4>Premium Wash</h4>
+                                <p>Chioma Eze • Lexus RX 350</p>
+                                <span class="wash-time">8:15 AM</span>
+                            </div>
+                            <div class="wash-earnings">
+                                <span class="amount">₦4,200</span>
+                                <span class="duration">50 mins</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Earnings Summary -->
+            <section class="earnings-summary">
+                <div class="section-header">
+                    <h3>Earnings Overview</h3>
+                    <div class="period-selector">
+                        <button class="period-btn active">Today</button>
+                        <button class="period-btn">Week</button>
+                        <button class="period-btn">Month</button>
+                        <button class="period-btn">Year</button>
+                    </div>
+                </div>
+                <div class="earnings-grid">
+                    <div class="earnings-card">
+                        <div class="card-header">
+                            <h4>Gross Earnings</h4>
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="card-body">
+                            <span class="amount">₦45,750</span>
+                            <div class="breakdown">
+                                <div class="breakdown-item">
+                                    <span>Premium (12):</span>
+                                    <span>₦35,400</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span>Standard (6):</span>
+                                    <span>₦10,350</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="earnings-card">
+                        <div class="card-header">
+                            <h4>WashPass Commission</h4>
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="card-body">
+                            <span class="amount">₦6,862</span>
+                            <div class="commission-info">
+                                <span class="rate">15% commission rate</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="earnings-card">
+                        <div class="card-header">
+                            <h4>Net Earnings</h4>
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="card-body">
+                            <span class="amount highlight">₦38,888</span>
+                            <div class="payout-info">
+                                <span>Next payout: Tomorrow</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="earnings-card">
+                        <div class="card-header">
+                            <h4>Performance Bonus</h4>
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="card-body">
+                            <span class="amount">₦2,500</span>
+                            <div class="bonus-info">
+                                <span>4.8★ rating bonus</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performance Analytics -->
+            <section class="performance-section">
+                <div class="section-header">
+                    <h3>Performance Analytics</h3>
+                    <button class="btn btn-sm btn-outline">
+                        <i class="fas fa-download"></i>
+                        Export Report
+                    </button>
+                </div>
+                <div class="analytics-grid">
+                    <div class="chart-card">
+                        <h4>Daily Revenue Trend</h4>
+                        <div class="chart-placeholder">
+                            <canvas id="revenueChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h4>Service Type Distribution</h4>
+                        <div class="chart-placeholder">
+                            <canvas id="serviceChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="metrics-card">
+                        <h4>Key Metrics</h4>
+                        <div class="metrics-list">
+                            <div class="metric-item">
+                                <span class="metric-label">Avg. Wash Duration</span>
+                                <span class="metric-value">32 mins</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Customer Satisfaction</span>
+                                <span class="metric-value">96%</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Peak Hours</span>
+                                <span class="metric-value">10AM - 2PM</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Repeat Customers</span>
+                                <span class="metric-value">68%</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Monthly Growth</span>
+                                <span class="metric-value">+18%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- QR Scanner Modal -->
+    <div id="partnerQRModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Scan Customer QR Code</h3>
+                <button class="modal-close" onclick="closePartnerQR()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="qr-scanner">
+                    <div class="scanner-frame">
+                        <div class="scanner-line"></div>
+                        <div class="qr-placeholder">
+                            <i class="fas fa-qrcode"></i>
+                            <p>Position customer QR code within frame</p>
+                        </div>
+                    </div>
+                    <div class="manual-entry">
+                        <p>Or enter customer code manually:</p>
+                        <div class="input-group">
+                            <input type="text" placeholder="WP-2024-XXXX-XXXX" class="form-input">
+                            <button class="btn btn-primary">Validate</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="partner-dashboard.js"></script>
+</body>
+</html>

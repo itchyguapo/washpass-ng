@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WashPass NG - Premium Car Wash Subscription</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-car-side"></i>
+                <span>WashPass NG</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#pricing" class="nav-link">Pricing</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#locations" class="nav-link">Locations</a>
+                <button class="btn btn-primary">Get Started</button>
+            </div>
+            <div class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-star"></i>
+                    <span>#1 Car Wash Subscription in Nigeria</span>
+                </div>
+                <h1 class="hero-title">Unlimited Car Washes,<br>One Simple Pass</h1>
+                <p class="hero-subtitle">Premium car care at your fingertips. Wash anytime, anywhere across Lagos and Abuja with our subscription service.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary btn-large">Start Free Trial</button>
+                    <button class="btn btn-secondary btn-large">
+                        <i class="fas fa-play-circle"></i>
+                        Watch Demo
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">Active Users</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">200+</span>
+                        <span class="stat-label">Partner Locations</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">4.8★</span>
+                        <span class="stat-label">User Rating</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="app-header">
+                            <div class="app-logo">
+                                <i class="fas fa-car-side"></i>
+                                <span>WashPass</span>
+                            </div>
+                            <div class="app-menu">
+                                <i class="fas fa-qrcode"></i>
+                            </div>
+                        </div>
+                        <div class="app-content">
+                            <div class="subscription-card">
+                                <div class="card-header">
+                                    <span>Premium Plan</span>
+                                    <span class="status active">Active</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="wash-count">
+                                        <span class="count">12</span>
+                                        <span class="label">Washes Left</span>
+                                    </div>
+                                    <div class="qr-placeholder">
+                                        <i class="fas fa-qrcode"></i>
+                                        <span>Scan to Wash</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Choose Your Perfect Plan</h2>
+                <p>Premium car care plans tailored for every Nigerian driver</p>
+                <div class="pricing-toggles">
+                    <button class="toggle-btn active" data-plan="monthly">Monthly</button>
+                    <button class="toggle-btn" data-plan="annual">Annual (Save 20%)</button>
+                </div>
+            </div>
+            <div class="pricing-cards">
+                <div class="pricing-card basic">
+                    <div class="card-header">
+                        <div class="plan-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="plan-info">
+                            <h3>Basic</h3>
+                            <div class="plan-badge">Starter</div>
+                        </div>
+                    </div>
+                    <div class="price-section">
+                        <div class="price">
+                            <span class="currency">₦</span>
+                            <span class="amount">8,500</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <div class="price-savings">Save ₦1,020 annually</div>
+                        <p class="description">Perfect for occasional washes</p>
+                    </div>
+                    <ul class="features">
+                        <li><i class="fas fa-check"></i> 4 washes per month</li>
+                        <li><i class="fas fa-check"></i> Basic exterior wash</li>
+                        <li><i class="fas fa-check"></i> Interior vacuum</li>
+                        <li><i class="fas fa-check"></i> Tire shine</li>
+                        <li><i class="fas fa-times"></i> Premium wax</li>
+                        <li><i class="fas fa-times"></i> Engine cleaning</li>
+                    </ul>
+                    <button class="btn btn-outline">Choose Basic</button>
+                </div>
+
+                <div class="pricing-card standard popular">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="card-header">
+                        <div class="plan-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="plan-info">
+                            <h3>Standard</h3>
+                            <div class="plan-badge">Recommended</div>
+                        </div>
+                    </div>
+                    <div class="price-section">
+                        <div class="price">
+                            <span class="currency">₦</span>
+                            <span class="amount">15,000</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <div class="price-savings">Save ₦18,000 annually</div>
+                        <p class="description">Best value for regular users</p>
+                    </div>
+                    <ul class="features">
+                        <li><i class="fas fa-check"></i> 8 washes per month</li>
+                        <li><i class="fas fa-check"></i> Premium exterior wash</li>
+                        <li><i class="fas fa-check"></i> Full interior detailing</li>
+                        <li><i class="fas fa-check"></i> Tire shine & dressing</li>
+                        <li><i class="fas fa-check"></i> Basic wax protection</li>
+                        <li><i class="fas fa-times"></i> Engine cleaning</li>
+                    </ul>
+                    <button class="btn btn-primary">Choose Standard</button>
+                </div>
+
+                <div class="pricing-card premium">
+                    <div class="card-header">
+                        <div class="plan-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="plan-info">
+                            <h3>Premium</h3>
+                            <div class="plan-badge">VIP</div>
+                        </div>
+                    </div>
+                    <div class="price-section">
+                        <div class="price">
+                            <span class="currency">₦</span>
+                            <span class="amount">25,000</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <div class="price-savings">Save ₦30,000 annually</div>
+                        <p class="description">Ultimate car care experience</p>
+                    </div>
+                    <ul class="features">
+                        <li><i class="fas fa-check"></i> Unlimited washes</li>
+                        <li><i class="fas fa-check"></i> Showroom exterior wash</li>
+                        <li><i class="fas fa-check"></i> Premium interior detailing</li>
+                        <li><i class="fas fa-check"></i> Complete tire care</li>
+                        <li><i class="fas fa-check"></i> Premium ceramic wax</li>
+                        <li><i class="fas fa-check"></i> Engine bay cleaning</li>
+                    </ul>
+                    <button class="btn btn-primary">Choose Premium</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>How WashPass NG Works</h2>
+                <p>Get your car washed in 3 simple steps</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Sign Up & Choose Plan</h3>
+                    <p>Download the app and select the subscription plan that fits your needs</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Find Nearby Location</h3>
+                    <p>Locate the nearest WashPass partner using our interactive map</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>Scan & Wash</h3>
+                    <p>Show your QR code at any partner location and enjoy your wash</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Locations Section -->
+    <section id="locations" class="locations">
+        <div class="container">
+            <div class="section-header">
+                <h2>Find Us Across Nigeria</h2>
+                <p>200+ partner locations in Lagos and Abuja</p>
+            </div>
+            <div class="map-container">
+                <div class="map-placeholder">
+                    <img src="https://picsum.photos/seed/lagosislandmap/1200/600" alt="Lagos Island Map - Nigeria" class="map-image">
+                    <div class="map-overlay">
+                        <div class="location-marker lagos">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Lagos</span>
+                        </div>
+                        <div class="location-marker abuja">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Abuja</span>
+                        </div>
+                        <div class="location-stats">
+                            <div class="stat">
+                                <span class="number">150+</span>
+                                <span class="label">Lagos Locations</span>
+                            </div>
+                            <div class="stat">
+                                <span class="number">50+</span>
+                                <span class="label">Abuja Locations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-car-side"></i>
+                        <span>WashPass NG</span>
+                    </div>
+                    <p>Premium car wash subscription service across Nigeria</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Locations</a></li>
+                        <li><a href="#">Mobile App</a></li>
+                        <li><a href="#">Gift Cards</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 WashPass NG. All rights reserved.</p>
+                <p class="branding">Powered by BIG MACHINE ENT</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
