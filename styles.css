@@ -100,6 +100,62 @@ body {
     font-size: 1.5rem;
     color: var(--text-primary);
     cursor: pointer;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.nav-toggle:hover {
+    color: var(--primary-color);
+}
+
+/* Mobile Menu Active State */
+.nav-menu.active {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 4rem;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    padding: 1.5rem;
+    gap: 1.5rem;
+    z-index: 999;
+    animation: slideDown 0.3s ease;
+}
+
+.nav-menu.active .nav-link {
+    font-size: 1.125rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+    text-align: center;
+}
+
+.nav-menu.active .nav-link:last-of-type {
+    border-bottom: none;
+}
+
+.nav-menu.active .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem;
+    font-size: 1.125rem;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Buttons */
