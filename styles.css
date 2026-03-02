@@ -795,14 +795,28 @@ body {
     font-weight: 500;
 }
 
-/* Responsive Design */
+/* Mobile First - Comprehensive Responsive Design */
+
+/* Tablet & Mobile (max-width: 768px) */
 @media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    /* Navigation */
     .nav-menu {
         display: none;
     }
     
     .nav-toggle {
         display: block;
+        font-size: 1.5rem;
+        padding: 0.5rem;
+    }
+    
+    /* Hero Section */
+    .hero {
+        padding: 3rem 0;
     }
     
     .hero-container {
@@ -811,45 +825,152 @@ body {
         gap: 2rem;
     }
     
+    .hero-badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
     }
     
     .hero-actions {
         flex-direction: column;
         align-items: center;
+        gap: 1rem;
+    }
+    
+    .hero-actions .btn {
+        width: 100%;
+        max-width: 280px;
     }
     
     .hero-stats {
+        flex-direction: row;
         justify-content: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .hero-stats .stat {
+        min-width: 80px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+    }
+    
+    /* Phone Mockup */
+    .phone-mockup {
+        width: 280px;
+        height: 560px;
+        margin: 0 auto;
+    }
+    
+    /* Section Headers */
+    .section-header h2 {
+        font-size: 1.75rem;
+    }
+    
+    .section-header p {
+        font-size: 1rem;
+    }
+    
+    /* Pricing Section */
+    .pricing {
+        padding: 3rem 0;
+    }
+    
+    .pricing-toggles {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .toggle-btn {
+        width: 100%;
+        max-width: 280px;
+        font-size: 0.875rem;
     }
     
     .pricing-cards {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 1.5rem;
     }
     
     .pricing-card {
-        padding: 1rem;
-        min-height: 480px;
+        padding: 1.25rem;
+        min-height: auto;
     }
     
-    .pricing-card h3 {
+    .pricing-card.popular {
+        transform: scale(1);
+    }
+    
+    .card-header {
+        margin-bottom: 1rem;
+    }
+    
+    .plan-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+    
+    .plan-info h3 {
         font-size: 1.25rem;
+    }
+    
+    .plan-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .price-section {
+        margin-bottom: 1.5rem;
     }
     
     .amount {
         font-size: 2rem;
     }
     
+    .price-savings {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.75rem;
+    }
+    
     .description {
-        font-size: 0.75rem;
-        min-height: 1.8rem;
+        font-size: 0.875rem;
+    }
+    
+    .features {
+        margin-bottom: 1.5rem;
     }
     
     .features li {
-        font-size: 0.75rem;
-        padding: 0.3rem 0;
+        font-size: 0.875rem;
+        padding: 0.5rem 0;
+    }
+    
+    .pricing-card .btn {
+        width: 100%;
+        padding: 0.875rem;
+        font-size: 1rem;
+    }
+    
+    /* How It Works */
+    .how-it-works {
+        padding: 3rem 0;
     }
     
     .steps {
@@ -857,32 +978,210 @@ body {
         gap: 2rem;
     }
     
+    .step {
+        padding: 0 0.5rem;
+    }
+    
+    .step-icon {
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.5rem;
+    }
+    
+    .step h3 {
+        font-size: 1.125rem;
+    }
+    
+    .step p {
+        font-size: 0.875rem;
+    }
+    
+    /* Locations */
+    .locations {
+        padding: 3rem 0;
+    }
+    
+    .map-container {
+        height: 400px;
+    }
+    
+    .map-placeholder {
+        height: 100%;
+    }
+    
+    .location-marker {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+    
     .location-stats {
-        flex-direction: column;
-        gap: 1rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+    
+    .location-stats .stat {
+        min-width: 100px;
+    }
+    
+    .location-stats .number {
+        font-size: 1.25rem;
+    }
+    
+    .location-stats .label {
+        font-size: 0.7rem;
+    }
+    
+    /* Footer */
+    .footer {
+        padding: 2rem 0 1rem;
     }
     
     .footer-content {
         grid-template-columns: 1fr;
+        gap: 2rem;
         text-align: center;
+    }
+    
+    .footer-section h4 {
+        font-size: 1rem;
+    }
+    
+    .footer-section ul li {
+        font-size: 0.875rem;
     }
     
     .social-links {
         justify-content: center;
     }
+    
+    .footer-bottom {
+        font-size: 0.8rem;
+    }
 }
 
+/* Small Mobile (max-width: 480px) */
 @media (max-width: 480px) {
     .hero-title {
-        font-size: 2rem;
+        font-size: 1.75rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.9rem;
     }
     
     .section-header h2 {
-        font-size: 2rem;
+        font-size: 1.5rem;
+    }
+    
+    .section-header p {
+        font-size: 0.9rem;
     }
     
     .phone-mockup {
-        width: 250px;
-        height: 500px;
+        width: 240px;
+        height: 480px;
+    }
+    
+    .pricing-card {
+        padding: 1rem;
+    }
+    
+    .amount {
+        font-size: 1.75rem;
+    }
+    
+    .features li {
+        font-size: 0.8rem;
+        padding: 0.4rem 0;
+    }
+    
+    .map-container {
+        height: 350px;
+    }
+    
+    .location-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .location-stats .stat {
+        width: 100%;
+    }
+}
+
+/* Extra Small Mobile (max-width: 375px) */
+@media (max-width: 375px) {
+    .container {
+        padding: 0 0.75rem;
+    }
+    
+    .hero-title {
+        font-size: 1.5rem;
+    }
+    
+    .hero-stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .hero-stats .stat {
+        width: 100%;
+    }
+    
+    .stat-number {
+        font-size: 1.25rem;
+    }
+    
+    .phone-mockup {
+        width: 220px;
+        height: 440px;
+    }
+    
+    .amount {
+        font-size: 1.5rem;
+    }
+    
+    .currency {
+        font-size: 1rem;
+    }
+    
+    .period {
+        font-size: 0.875rem;
+    }
+    
+    .plan-info h3 {
+        font-size: 1.125rem;
+    }
+    
+    .features li {
+        font-size: 0.75rem;
+    }
+    
+    .step-icon {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.25rem;
+    }
+    
+    .step h3 {
+        font-size: 1rem;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .btn:active {
+        transform: scale(0.98);
+    }
+    
+    .pricing-card:active {
+        transform: translateY(-2px);
+    }
+    
+    .nav-toggle:active {
+        opacity: 0.7;
     }
 }
