@@ -14,9 +14,10 @@ const Auth = {
                 isLoggedIn: false,
                 name: '',
                 phone: '',
-                activePlan: null, // 'basic', 'standard', 'premium', or null
+                activePlan: null, 
                 washCredits: 0,
-                history: []
+                history: [],
+                vehicles: []
             };
             this.save(defaultUser);
         }
@@ -69,7 +70,25 @@ const Auth = {
     // Buy one-time wash
     buyOneTimeWash() {
         const user = this.getUser();
-        user.washCredits += 1;
+        user.washCredits = (user.washCredits || 0) + 1;
+        
+        // Add to history
+        if (!user.history) user.history = [];
+        user.history.unshift({
+            type: 'Credit Purchase',
+            date: new Date().toLocaleDateString(),
+            location: 'Online Store',
+            status: 'Success'
+        });
+        
+        this.save(user);
+    },
+
+    // Add vehicle to account
+    addVehicle(vehicle) {
+        const user = this.getUser();
+        if (!user.vehicles) user.vehicles = [];
+        user.vehicles.push(vehicle);
         this.save(user);
     },
 

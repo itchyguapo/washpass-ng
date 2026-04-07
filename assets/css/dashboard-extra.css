@@ -1,0 +1,114 @@
+/* 
+ * Extra Dashboard Styles for Personalization
+ */
+
+.empty-state, .empty-state-wide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--text-light);
+    background: #f8fafc;
+    border: 2px dashed #e2e8f0;
+    border-radius: var(--radius-xl);
+}
+
+.empty-state i, .empty-state-wide i {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: #cbd5e1;
+}
+
+.empty-state-wide {
+    grid-column: 1 / -1;
+    padding: 4rem;
+}
+
+.empty-state-wide h4 {
+    color: var(--dark-charcoal);
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+}
+
+.empty-car-icon {
+    width: 80px;
+    height: 80px;
+    background: #f1f5f9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.empty-car-icon i {
+    font-size: 2.5rem;
+    margin-bottom: 0;
+}
+
+.location-search {
+    margin-bottom: 1.5rem;
+}
+
+.location-search .form-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.location-search .form-input {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--border-color);
+}
+
+/* Vehicle Cards Contextual Styling */
+.vehicle-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.vehicle-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--primary-color);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.vehicle-card.primary::before {
+    opacity: 1;
+}
+
+/* 2026 Scanning Animation Styles */
+.scanning-active {
+    position: relative;
+    overflow: hidden;
+}
+
+.scanning-active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(37, 99, 235, 0.05),
+        transparent
+    );
+    animation: scanLine 2s infinite linear;
+}
+
+@keyframes scanLine {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}

@@ -69,6 +69,21 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// Show/Hide Car Loader Utility
+function toggleCarLoader(show, text = "Revving up...") {
+    const loader = document.getElementById('carLoader');
+    if (!loader) return;
+    
+    const textEl = loader.querySelector('.loading-text');
+    if (textEl) textEl.textContent = text;
+    
+    if (show) {
+        loader.classList.add('active');
+    } else {
+        loader.classList.remove('active');
+    }
+}
+
 // Mobile menu toggle
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.querySelector('.nav-menu');
@@ -393,7 +408,10 @@ function completeRegistration() {
 }
 
 function redirectToDashboard() {
-    window.location.href = 'dashboard.html';
+    toggleCarLoader(true, "Parking and opening your garage...");
+    setTimeout(() => {
+        window.location.href = 'dashboard.html';
+    }, 1500);
 }
 
 // Close modal when clicking outside

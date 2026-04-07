@@ -6,6 +6,8 @@
     <title>WashPass NG - User Dashboard</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/dashboard-extra.css">
+    <link rel="stylesheet" href="assets/css/car-theme.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -115,14 +117,13 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <div class="stat-icon blue">
-                            <i class="fas fa-map-marker-alt"></i>
+                            <i class="fas fa-car-side"></i>
                         </div>
-                        <span class="stat-change positive">+2 new</span>
                     </div>
                     <div class="stat-content">
-                        <h3>Nearby Locations</h3>
-                        <span class="stat-number">8</span>
-                        <p>Within 5km radius</p>
+                        <h3>Total Washes</h3>
+                        <span class="stat-number" id="totalWashes">0</span>
+                        <p>Lifetime stats</p>
                     </div>
                 </div>
 
@@ -131,12 +132,11 @@
                         <div class="stat-icon green">
                             <i class="fas fa-leaf"></i>
                         </div>
-                        <span class="stat-change">Eco-friendly</span>
                     </div>
                     <div class="stat-content">
                         <h3>Water Saved</h3>
-                        <span class="stat-number">2,450L</span>
-                        <p>This month</p>
+                        <span class="stat-number" id="waterSaved">0L</span>
+                        <p>Eco-impact</p>
                     </div>
                 </div>
 
@@ -145,26 +145,11 @@
                         <div class="stat-icon orange">
                             <i class="fas fa-star"></i>
                         </div>
-                        <span class="stat-change">+0.2</span>
                     </div>
                     <div class="stat-content">
                         <h3>Loyalty Points</h3>
-                        <span class="stat-number">850</span>
+                        <span class="stat-number" id="loyaltyPoints">0</span>
                         <p>Redeem rewards</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon purple">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <span class="stat-change">Last: 2 days ago</span>
-                    </div>
-                    <div class="stat-content">
-                        <h3>Time Saved</h3>
-                        <span class="stat-number">4.5h</span>
-                        <p>This month</p>
                     </div>
                 </div>
             </section>
@@ -176,45 +161,11 @@
                         <h3>Recent Washes</h3>
                         <a href="#" class="view-all">View All</a>
                     </div>
-                    <div class="activity-list">
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="activity-details">
-                                <h4>Premium Wash Complete</h4>
-                                <p>Lekki Phase 1 - Victoria Island</p>
-                                <span class="activity-time">2 days ago</span>
-                            </div>
-                            <div class="activity-points">
-                                <span class="points">+50 pts</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="activity-details">
-                                <h4>Standard Wash Complete</h4>
-                                <p>Ikeja City Mall</p>
-                                <span class="activity-time">5 days ago</span>
-                            </div>
-                            <div class="activity-points">
-                                <span class="points">+30 pts</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="activity-details">
-                                <h4>Premium Wash Complete</h4>
-                                <p>Abuja Central Market</p>
-                                <span class="activity-time">1 week ago</span>
-                            </div>
-                            <div class="activity-points">
-                                <span class="points">+50 pts</span>
-                            </div>
+                    <div class="activity-list" id="activityList">
+                        <!-- Dynamic History -->
+                        <div class="empty-state">
+                            <i class="fas fa-clock"></i>
+                            <p>No wash history yet. Your first shine is waiting!</p>
                         </div>
                     </div>
                 </div>
@@ -224,39 +175,16 @@
                         <h3>Nearby Locations</h3>
                         <a href="#" class="view-map">View Map</a>
                     </div>
-                    <div class="locations-list">
-                        <div class="location-item">
-                            <div class="location-info">
-                                <h4>Lekki Phase 1 Car Wash</h4>
-                                <p><i class="fas fa-map-marker-alt"></i> 1.2 km away</p>
-                                <div class="location-meta">
-                                    <span class="rating">⭐ 4.8</span>
-                                    <span class="status open">Open</span>
-                                </div>
-                            </div>
-                            <button class="btn btn-sm btn-primary">Navigate</button>
+                    <div class="location-search">
+                        <div class="form-group">
+                            <input type="text" id="locationInput" placeholder="Enter your area (e.g. Lekki)" class="form-input">
+                            <button class="btn btn-primary btn-sm" onclick="searchNearby()">Find Nearest</button>
                         </div>
-                        <div class="location-item">
-                            <div class="location-info">
-                                <h4>Victoria Island Premium</h4>
-                                <p><i class="fas fa-map-marker-alt"></i> 2.5 km away</p>
-                                <div class="location-meta">
-                                    <span class="rating">⭐ 4.9</span>
-                                    <span class="status open">Open</span>
-                                </div>
-                            </div>
-                            <button class="btn btn-sm btn-primary">Navigate</button>
-                        </div>
-                        <div class="location-item">
-                            <div class="location-info">
-                                <h4>Ikeja City Mall Branch</h4>
-                                <p><i class="fas fa-map-marker-alt"></i> 4.8 km away</p>
-                                <div class="location-meta">
-                                    <span class="rating">⭐ 4.7</span>
-                                    <span class="status busy">Busy</span>
-                                </div>
-                            </div>
-                            <button class="btn btn-sm btn-outline">Navigate</button>
+                    </div>
+                    <div class="locations-list" id="locationsList">
+                        <div class="empty-state">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p>Enter your location to find nearby WashPass partners.</p>
                         </div>
                     </div>
                 </div>
@@ -271,57 +199,52 @@
                         Add Vehicle
                     </button>
                 </div>
-                <div class="vehicles-grid">
-                    <div class="vehicle-card primary">
-                        <div class="vehicle-header">
-                            <div class="vehicle-icon">
-                                <i class="fas fa-car"></i>
-                            </div>
-                            <span class="vehicle-badge primary">Primary</span>
+                <div class="vehicles-grid" id="vehiclesGrid">
+                    <!-- Dynamic Vehicles will be injected here -->
+                    <div class="empty-state-wide">
+                        <div class="empty-car-icon">
+                            <i class="fas fa-car-side"></i>
                         </div>
-                        <div class="vehicle-details">
-                            <h4>Toyota Camry 2020</h4>
-                            <p class="license-plate">ABC-123-GH</p>
-                            <p class="vehicle-color">Silver</p>
-                        </div>
-                        <div class="vehicle-stats">
-                            <div class="stat">
-                                <span class="label">Last Wash</span>
-                                <span class="value">2 days ago</span>
-                            </div>
-                            <div class="stat">
-                                <span class="label">Total Washes</span>
-                                <span class="value">24</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="vehicle-card">
-                        <div class="vehicle-header">
-                            <div class="vehicle-icon">
-                                <i class="fas fa-truck"></i>
-                            </div>
-                        </div>
-                        <div class="vehicle-details">
-                            <h4>Honda CR-V 2019</h4>
-                            <p class="license-plate">XYZ-789-KL</p>
-                            <p class="vehicle-color">Black</p>
-                        </div>
-                        <div class="vehicle-stats">
-                            <div class="stat">
-                                <span class="label">Last Wash</span>
-                                <span class="value">1 week ago</span>
-                            </div>
-                            <div class="stat">
-                                <span class="label">Total Washes</span>
-                                <span class="value">18</span>
-                            </div>
-                        </div>
+                        <h4>Your Garage is Empty</h4>
+                        <p>Add your primary vehicle to start enjoying specialized car care.</p>
+                        <button class="btn btn-primary" onclick="showAddVehicleModal()">
+                            <i class="fas fa-plus"></i>
+                            Register Vehicle
+                        </button>
                     </div>
                 </div>
             </section>
         </div>
     </main>
+
+    <!-- Add Vehicle Modal -->
+    <div id="vehicleModal" class="modal">
+        <div class="modal-content auth-modal">
+            <div class="modal-header">
+                <h2>Add Vehicle</h2>
+                <button class="modal-close" onclick="closeAddVehicleModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addVehicleForm" onsubmit="handleAddVehicle(event)">
+                <div class="form-group">
+                    <label>Vehicle Make & Model</label>
+                    <input type="text" id="vehicleModel" placeholder="e.g. Toyota Camry" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>License Plate</label>
+                    <input type="text" id="vehiclePlate" placeholder="ABC-123-GH" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Color</label>
+                    <input type="text" id="vehicleColor" placeholder="Silver" class="form-input" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">
+                    Save to Garage
+                </button>
+            </form>
+        </div>
+    </div>
 
     <!-- QR Scanner Modal -->
     <div id="qrModal" class="modal">
@@ -353,6 +276,15 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Car-Themed Loader Overlay -->
+    <div id="carLoader" class="car-loader-overlay">
+        <div class="car-animation-wrapper">
+            <i class="fas fa-car loader-car"></i>
+            <div class="loader-road"></div>
+        </div>
+        <div class="loading-text">Revving up...</div>
     </div>
 
     <script src="assets/js/auth.js"></script>
