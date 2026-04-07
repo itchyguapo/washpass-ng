@@ -297,34 +297,72 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Auth Modal Logic
-const authModal = document.getElementById('authModal');
+function getAuthModal() {
+    return document.getElementById('authModal');
+}
+
 let currentStep = 1;
 
 function openAuthModal() {
-    authModal.style.display = 'flex';
-    goToStep(1);
-    document.body.style.overflow = 'hidden'; // Prevent scrolling
+    const modal = getAuthModal();
+    if (modal) {
+        modal.style.display = 'flex';
+        // Force a reflow for smooth transition
+        void modal.offsetWidth;
+        modal.classList.add('visible');
+        goToStep(1);
+        document.body.style.overflow = 'hidden'; 
+    } else {
+        console.error('Auth Modal not found in DOM');
+    }
 }
 
 function closeAuthModal() {
-    authModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
+    const modal = getAuthModal();
+    if (modal) {
+        modal.classList.remove('visible');
+        setTimeout(() => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }, 400); // Wait for transition
+    }
 }
 
 function goToStep(step) {
+    const modal = getAuthModal();
+    if (!modal) return;
+
+    // Loading state simulation for smoother 2026 feels
+    if (step === 2 || step === 3) {
+        const currentBtn = document.querySelector(`.auth-step.active .btn-primary`);
+        if (currentBtn) {
+            const originalText = currentBtn.innerHTML;
+            currentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            currentBtn.disabled = true;
+            
+            setTimeout(() => {
+                executeStepChange(step);
+                currentBtn.innerHTML = originalText;
+                currentBtn.disabled = false;
+            }, 800);
+            return;
+        }
+    }
+    
+    executeStepChange(step);
+}
+
+function executeStepChange(step) {
     // Hide all steps
     document.querySelectorAll('.auth-step').forEach(el => el.classList.remove('active'));
     // Show target step
-    document.getElementById(`step${step}`).classList.add('active');
+    const targetStep = document.getElementById(`step${step}`);
+    if (targetStep) targetStep.classList.add('active');
     
     // Update progress bar
     document.querySelectorAll('.progress-step').forEach(el => {
         const stepNum = parseInt(el.dataset.step);
-        if (stepNum <= step) {
-            el.classList.add('active');
-        } else {
-            el.classList.remove('active');
-        }
+        el.classList.toggle('active', stepNum <= step);
     });
 
     currentStep = step;

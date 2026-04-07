@@ -348,24 +348,35 @@
                 <div class="auth-header">
                     <i class="fas fa-car-side"></i>
                     <h2>Join WashPass NG</h2>
-                    <p>Enter your details to get started</p>
+                    <p>Start your premium car care journey in Lagos or Abuja.</p>
                 </div>
                 <div class="auth-form">
                     <div class="form-group">
                         <label for="fullName">Full Name</label>
-                        <input type="text" id="fullName" placeholder="e.g. Adebayo Johnson" class="form-input">
+                        <input type="text" id="fullName" placeholder="e.g. Adebayo Johnson" class="form-input" required>
                     </div>
                     <div class="form-group">
                         <label for="phoneNumber">Phone Number</label>
                         <div class="phone-input-wrapper">
                             <span class="country-code">+234</span>
-                            <input type="tel" id="phoneNumber" placeholder="812 345 6789" class="form-input phone-input">
+                            <input type="tel" id="phoneNumber" placeholder="812 345 6789" class="form-input phone-input" required>
                         </div>
                     </div>
-                    <button class="btn btn-primary btn-full" onclick="goToStep(2)">
-                        Continue
+                    <button class="btn btn-primary btn-full" id="continue-step-1" onclick="goToStep(2)">
+                        Continue to Verify
                         <i class="fas fa-arrow-right"></i>
                     </button>
+                </div>
+                <!-- Trust Section 2026 -->
+                <div class="auth-trust">
+                    <div class="trust-item">
+                        <i class="fas fa-shield-alt"></i>
+                        SSL Secure
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-check-circle"></i>
+                        BIG MACHINE ENT Verified
+                    </div>
                 </div>
             </div>
 
