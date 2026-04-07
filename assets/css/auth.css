@@ -1,0 +1,171 @@
+/* Auth Modal Styling */
+
+.auth-modal {
+    max-width: 450px;
+    padding: 40px;
+    border-radius: 24px;
+    text-align: center;
+}
+
+.auth-progress {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.progress-step {
+    flex: 1;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.progress-step.active {
+    background: #2563eb;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
+}
+
+.auth-step {
+    display: none;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.auth-step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-header {
+    margin-bottom: 32px;
+}
+
+.auth-header i {
+    font-size: 3rem;
+    color: #2563eb;
+    margin-bottom: 16px;
+}
+
+.auth-header h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.auth-header p {
+    color: #6b7280;
+}
+
+.auth-form {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.phone-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: #f9fafb;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.country-code {
+    padding: 0 16px;
+    background: #f3f4f6;
+    color: #4b5563;
+    font-weight: 600;
+    border-right: 1.5px solid #e5e7eb;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.phone-input {
+    border: none !important;
+    background: transparent !important;
+}
+
+.btn-full {
+    width: 100%;
+    margin-top: 10px;
+    padding: 16px;
+    font-size: 1.1rem;
+}
+
+/* OTP Specifics */
+.otp-input-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 24px 0;
+}
+
+.otp-input {
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f9fafb;
+}
+
+.otp-input:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.resend-text {
+    text-align: center;
+    margin: 16px 0 24px;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.resend-text a {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+/* Success Step */
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #ecfdf5;
+    color: #10b981;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2.5rem;
+}
+
+.auth-summary {
+    background: #f3f4f6;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    color: #4b5563;
+    line-height: 1.6;
+}

@@ -1,5 +1,100 @@
 // Dashboard specific JavaScript
 
+// Auth & Personalization
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if user is logged in
+    Auth.checkAuth();
+    
+    // Initialize Dashboard UI
+    const user = Auth.getUser();
+    if (user) {
+        // Update Name
+        const nameElements = document.querySelectorAll('.user-name');
+        nameElements.forEach(el => el.textContent = user.name || 'Adebayo');
+
+        // Update Plan Status
+        updatePlanUI(user);
+    }
+});
+
+function updatePlanUI(user) {
+    const planNameEl = document.getElementById('plan-name');
+    const statusBadge = document.getElementById('plan-status');
+    const washCountEl = document.querySelector('.wash-count .count, .usage-stats .stat-number');
+    
+    if (user.activePlan) {
+        planNameEl.textContent = user.activePlan.charAt(0).toUpperCase() + user.activePlan.slice(1) + " Plan";
+        statusBadge.textContent = "Active";
+        statusBadge.className = "status-badge active";
+        
+        if (user.activePlan === 'premium') {
+            document.querySelectorAll('.stat-number')[1].textContent = "∞";
+        } else {
+            // Update credits for basic/standard
+            const credits = user.washCredits;
+            const creditsElements = document.querySelectorAll('.stat-number');
+            if (creditsElements[1]) creditsElements[1].textContent = credits;
+        }
+    } else {
+        // No Active Plan
+        planNameEl.textContent = "No Active Subscription";
+        statusBadge.textContent = "Inactive";
+        statusBadge.className = "status-badge inactive";
+        
+        // Show "Buy One-Time Wash" or "Explore Plans"
+        const creditsElements = document.querySelectorAll('.stat-number');
+        if (creditsElements[1]) creditsElements[1].textContent = user.washCredits || 0;
+    }
+}
+
+// Logout Functionality
+function handleLogout() {
+    Auth.logout();
+}
+
+// Attach logout to button
+document.addEventListener('DOMContentLoaded', () => {
+    const logoutBtn = document.querySelector('.btn-sm[onclick*="Logout"], .nav-menu button');
+    if (logoutBtn) {
+        logoutBtn.onclick = handleLogout;
+    }
+});
+
+// Buy One-Time Wash
+function handleBuyOneTimeWash() {
+    showNotification('Processing simulated payment...', 'info');
+    
+    setTimeout(() => {
+        Auth.buyOneTimeWash();
+        const user = Auth.getUser();
+        updatePlanUI(user);
+        showNotification('1 Wash Credit added to your account! ₦2,500 charged.', 'success');
+    }, 2000);
+}
+
+// Attach "Add Vehicle" or other buttons to One-Time Wash for demo
+document.addEventListener('DOMContentLoaded', () => {
+    const buyButtons = document.querySelectorAll('.quick-actions .btn-outline');
+    buyButtons.forEach(btn => {
+        if (btn.textContent.includes('Add Vehicle')) {
+            btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Buy One-Time Wash';
+            btn.onclick = (e) => {
+                e.preventDefault();
+                handleBuyOneTimeWash();
+            };
+        }
+    });
+
+    // Check for temp plan from index.html registration
+    const tempPlan = localStorage.getItem('temp_selected_plan');
+    if (tempPlan) {
+        Auth.subscribe(tempPlan);
+        localStorage.removeItem('temp_selected_plan');
+        updatePlanUI(Auth.getUser());
+        showNotification(`Welcome! Your ${tempPlan} subscription is active.`, 'success');
+    }
+});
+
 // QR Scanner Modal Functions
 function showQRScanner() {
     const modal = document.getElementById('qrModal');
@@ -22,114 +117,13 @@ function closeQRScanner() {
 }
 
 // Close modal when clicking outside
-document.getElementById('qrModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeQRScanner();
-    }
-});
-
-// Navigation active state
-document.querySelectorAll('.dashboard-nav .nav-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.querySelectorAll('.dashboard-nav .nav-link').forEach(l => l.classList.remove('active'));
-        this.classList.add('active');
+if (document.getElementById('qrModal')) {
+    document.getElementById('qrModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeQRScanner();
+        }
     });
-});
-
-// Animate stats on page load
-function animateValue(element, start, end, duration) {
-    const range = end - start;
-    const increment = range / (duration / 16);
-    let current = start;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= end) {
-            current = end;
-            clearInterval(timer);
-        }
-        
-        if (element.textContent.includes('∞')) {
-            element.textContent = '∞';
-        } else if (element.textContent.includes('L')) {
-            element.textContent = Math.floor(current).toLocaleString() + 'L';
-        } else if (element.textContent.includes('pts')) {
-            element.textContent = Math.floor(current) + ' pts';
-        } else if (element.textContent.includes('h')) {
-            element.textContent = current.toFixed(1) + 'h';
-        } else {
-            element.textContent = Math.floor(current);
-        }
-    }, 16);
 }
-
-// Trigger animations when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    // Animate subscription stats
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-                entry.target.classList.add('animated');
-                
-                const statNumbers = entry.target.querySelectorAll('.stat-number');
-                statNumbers.forEach(stat => {
-                    const text = stat.textContent;
-                    if (text.includes('12')) {
-                        animateValue(stat, 0, 12, 1000);
-                    } else if (text.includes('8')) {
-                        animateValue(stat, 0, 8, 1000);
-                    } else if (text.includes('2,450')) {
-                        animateValue(stat, 0, 2450, 1500);
-                    } else if (text.includes('850')) {
-                        animateValue(stat, 0, 850, 1500);
-                    } else if (text.includes('4.5')) {
-                        animateValue(stat, 0, 4.5, 1500);
-                    }
-                });
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    // Observe stats cards
-    document.querySelectorAll('.stats-grid .stat-card').forEach(card => {
-        observer.observe(card);
-    });
-    
-    // Observe subscription card
-    const subscriptionCard = document.querySelector('.subscription-card');
-    if (subscriptionCard) {
-        observer.observe(subscriptionCard);
-    }
-});
-
-// Location navigation
-document.querySelectorAll('.location-item button').forEach(button => {
-    button.addEventListener('click', function() {
-        const locationName = this.closest('.location-item').querySelector('h4').textContent;
-        
-        // Simulate navigation action
-        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening Maps...';
-        this.disabled = true;
-        
-        setTimeout(() => {
-            this.innerHTML = 'Navigate';
-            this.disabled = false;
-            
-            // Show success message
-            showNotification(`Opening navigation to ${locationName}`, 'success');
-        }, 1500);
-    });
-});
-
-// Add vehicle functionality
-document.querySelectorAll('.btn-outline').forEach(button => {
-    if (button.textContent.includes('Add Vehicle')) {
-        button.addEventListener('click', function() {
-            showNotification('Vehicle addition feature coming soon!', 'info');
-        });
-    }
-});
 
 // Notification system
 function showNotification(message, type = 'info') {
@@ -145,188 +139,45 @@ function showNotification(message, type = 'info') {
         </button>
     `;
     
-    // Add notification styles if not already present
     if (!document.querySelector('#notification-styles')) {
         const styles = document.createElement('style');
         styles.id = 'notification-styles';
         styles.textContent = `
             .notification {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: white;
-                border-radius: 0.75rem;
-                padding: 1rem 1.5rem;
+                position: fixed; top: 20px; right: 20px; background: white;
+                border-radius: 0.75rem; padding: 1rem 1.5rem;
                 box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-                z-index: 2000;
-                min-width: 300px;
-                border-left: 4px solid var(--primary-color);
+                display: flex; align-items: center; gap: 1rem; z-index: 2000;
+                min-width: 300px; border-left: 4px solid #2563eb;
                 animation: slideIn 0.3s ease-out;
             }
-            
-            .notification.success {
-                border-left-color: var(--secondary-color);
-            }
-            
-            .notification-content {
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                flex: 1;
-            }
-            
-            .notification i {
-                color: var(--primary-color);
-            }
-            
-            .notification.success i {
-                color: var(--secondary-color);
-            }
-            
-            .notification-close {
-                background: none;
-                border: none;
-                color: var(--text-secondary);
-                cursor: pointer;
-                padding: 0.25rem;
-                border-radius: 0.25rem;
-                transition: all 0.3s ease;
-            }
-            
-            .notification-close:hover {
-                background: var(--bg-tertiary);
-                color: var(--text-primary);
-            }
-            
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            
-            @keyframes slideOut {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
+            .notification.success { border-left-color: #10b981; }
+            .notification-content { display: flex; align-items: center; gap: 0.75rem; flex: 1; }
+            .notification i { color: #2563eb; }
+            .notification.success i { color: #10b981; }
+            .notification-close { background: none; border: none; color: #6b7280; cursor: pointer; }
+            @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
         `;
         document.head.appendChild(styles);
     }
     
     document.body.appendChild(notification);
-    
-    // Auto remove after 5 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease-out';
         setTimeout(() => notification.remove(), 300);
     }, 5000);
     
-    // Manual close
     notification.querySelector('.notification-close').addEventListener('click', () => {
         notification.style.animation = 'slideOut 0.3s ease-out';
         setTimeout(() => notification.remove(), 300);
     });
 }
 
-// Simulate real-time updates
-function simulateRealTimeUpdates() {
-    // Update nearby locations occasionally
-    setInterval(() => {
-        const nearbyStat = document.querySelector('.stat-card:first-child .stat-number');
-        if (nearbyStat && Math.random() > 0.8) {
-            const currentCount = parseInt(nearbyStat.textContent);
-            const newCount = Math.max(5, Math.min(12, currentCount + (Math.random() > 0.5 ? 1 : -1)));
-            nearbyStat.textContent = newCount;
-        }
-    }, 30000);
-    
-    // Update loyalty points occasionally
-    setInterval(() => {
-        const pointsStat = document.querySelector('.stat-card:nth-child(3) .stat-number');
-        if (pointsStat && Math.random() > 0.9) {
-            const currentPoints = parseInt(pointsStat.textContent);
-            const newPoints = currentPoints + Math.floor(Math.random() * 20) + 5;
-            pointsStat.textContent = newPoints;
-            
-            showNotification(`+${newPoints - currentPoints} loyalty points earned!`, 'success');
-        }
-    }, 45000);
-}
-
-// Initialize real-time updates
-simulateRealTimeUpdates();
-
-// Mobile menu toggle (if needed)
-const mobileMenuToggle = document.querySelector('.nav-toggle');
-if (mobileMenuToggle) {
-    mobileMenuToggle.addEventListener('click', function() {
-        const navMenu = document.querySelector('.dashboard-nav .nav-menu');
-        navMenu.classList.toggle('mobile-active');
-    });
-}
-
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
-
-// Add hover effects to cards
+// Static UI enhancements
 document.querySelectorAll('.stat-card, .vehicle-card, .activity-item, .location-item').forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-2px)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
-
-// Simulate QR code scan success
-function simulateQRScan() {
-    const qrPlaceholder = document.querySelector('.qr-placeholder');
-    if (qrPlaceholder) {
-        setTimeout(() => {
-            qrPlaceholder.innerHTML = `
-                <i class="fas fa-check-circle" style="color: var(--secondary-color); font-size: 3rem;"></i>
-                <p style="color: var(--secondary-color); font-weight: 600;">QR Code Scanned Successfully!</p>
-                <p style="font-size: 0.875rem; margin-top: 0.5rem;">Show this screen to the attendant</p>
-            `;
-            
-            setTimeout(() => {
-                closeQRScanner();
-                showNotification('Wash session started! Enjoy your service.', 'success');
-            }, 2000);
-        }, 3000);
-    }
-}
-
-// Trigger QR scan simulation when modal opens
-document.querySelector('.btn-primary').addEventListener('click', function() {
-    if (this.textContent.includes('Scan to Wash')) {
-        setTimeout(simulateQRScan, 1000);
-    }
+    card.addEventListener('mouseenter', function() { this.style.transform = 'translateY(-2px)'; });
+    card.addEventListener('mouseleave', function() { this.style.transform = 'translateY(0)'; });
 });
 
 console.log('WashPass NG Dashboard - User Interface Loaded');

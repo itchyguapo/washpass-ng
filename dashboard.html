@@ -24,7 +24,7 @@
                 <a href="#locations" class="nav-link">Locations</a>
                 <a href="#history" class="nav-link">History</a>
                 <a href="#profile" class="nav-link">Profile</a>
-                <button class="btn btn-primary btn-sm">
+                <button class="btn btn-primary btn-sm" onclick="handleLogout()">
                     <i class="fas fa-sign-out-alt"></i>
                     Logout
                 </button>
@@ -63,8 +63,8 @@
                 <div class="subscription-card">
                     <div class="card-header">
                         <div class="plan-info">
-                            <h3>Premium Plan</h3>
-                            <span class="status-badge active">Active</span>
+                            <h3 id="plan-name">Premium Plan</h3>
+                            <span id="plan-status" class="status-badge active">Active</span>
                         </div>
                         <div class="plan-price">
                             <span class="currency">₦</span>
@@ -355,6 +355,7 @@
         </div>
     </div>
 
+    <script src="assets/js/auth.js"></script>
     <script src="assets/js/script.js"></script>
     <script src="assets/js/dashboard.js"></script>
 </body>

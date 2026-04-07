@@ -296,4 +296,99 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Auth Modal Logic
+const authModal = document.getElementById('authModal');
+let currentStep = 1;
+
+function openAuthModal() {
+    authModal.style.display = 'flex';
+    goToStep(1);
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
+}
+
+function closeAuthModal() {
+    authModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function goToStep(step) {
+    // Hide all steps
+    document.querySelectorAll('.auth-step').forEach(el => el.classList.remove('active'));
+    // Show target step
+    document.getElementById(`step${step}`).classList.add('active');
+    
+    // Update progress bar
+    document.querySelectorAll('.progress-step').forEach(el => {
+        const stepNum = parseInt(el.dataset.step);
+        if (stepNum <= step) {
+            el.classList.add('active');
+        } else {
+            el.classList.remove('active');
+        }
+    });
+
+    currentStep = step;
+}
+
+function moveFocus(current, nextId) {
+    if (current.value.length === 1) {
+        document.getElementById(nextId).focus();
+    }
+}
+
+function finishOtp() {
+    // Auto-complete after typing last digit (simulation)
+    setTimeout(() => {
+        completeRegistration();
+    }, 500);
+}
+
+function completeRegistration() {
+    const fullName = document.getElementById('fullName').value || 'Adebayo';
+    const phone = document.getElementById('phoneNumber').value || '08123456789';
+    
+    // Save to Auth state
+    Auth.login(fullName, phone);
+    
+    // Move to success step
+    goToStep(3);
+}
+
+function redirectToDashboard() {
+    window.location.href = 'dashboard.html';
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === authModal) {
+        closeAuthModal();
+    }
+});
+
+// Attach triggers to buttons
+document.addEventListener('DOMContentLoaded', () => {
+    // "Get Started" & "Start Free Trial" buttons
+    const startButtons = document.querySelectorAll('.nav-menu .btn-primary, .hero-actions .btn-primary');
+    startButtons.forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            openAuthModal();
+        };
+    });
+
+    // Pricing Plan buttons
+    const planButtons = document.querySelectorAll('.pricing-card button');
+    planButtons.forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            // Store selected plan in localStorage for the dashboard to pick up
+            const planCard = btn.closest('.pricing-card');
+            const planName = planCard.querySelector('h3').textContent.toLowerCase();
+            localStorage.setItem('temp_selected_plan', planName);
+            openAuthModal();
+        };
+    });
+});
+
 console.log('WashPass NG - Premium Car Wash Subscription Platform');
+

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WashPass NG - Premium Car Wash Subscription</title>
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -328,6 +329,87 @@
         </div>
     </footer>
 
+    <!-- Registration Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content auth-modal">
+            <div class="modal-header">
+                <div class="auth-progress">
+                    <div class="progress-step active" data-step="1"></div>
+                    <div class="progress-step" data-step="2"></div>
+                    <div class="progress-step" data-step="3"></div>
+                </div>
+                <button class="modal-close" onclick="closeAuthModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Step 1: Identity -->
+            <div class="auth-step active" id="step1">
+                <div class="auth-header">
+                    <i class="fas fa-car-side"></i>
+                    <h2>Join WashPass NG</h2>
+                    <p>Enter your details to get started</p>
+                </div>
+                <div class="auth-form">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" placeholder="e.g. Adebayo Johnson" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <div class="phone-input-wrapper">
+                            <span class="country-code">+234</span>
+                            <input type="tel" id="phoneNumber" placeholder="812 345 6789" class="form-input phone-input">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="goToStep(2)">
+                        Continue
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: OTP Simulation -->
+            <div class="auth-step" id="step2">
+                <div class="auth-header">
+                    <i class="fas fa-sms"></i>
+                    <h2>Verify Your Phone</h2>
+                    <p>We've sent a 4-digit code to your phone</p>
+                </div>
+                <div class="auth-form">
+                    <div class="otp-input-group">
+                        <input type="text" maxlength="1" class="otp-input" onkeyup="moveFocus(this, 'otp2')">
+                        <input type="text" id="otp2" maxlength="1" class="otp-input" onkeyup="moveFocus(this, 'otp3')">
+                        <input type="text" id="otp3" maxlength="1" class="otp-input" onkeyup="moveFocus(this, 'otp4')">
+                        <input type="text" id="otp4" maxlength="1" class="otp-input" onkeyup="finishOtp()">
+                    </div>
+                    <p class="resend-text">Didn't receive code? <a href="#">Resend in 30s</a></p>
+                    <button class="btn btn-primary btn-full" onclick="completeRegistration()">
+                        Verify & Register
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Success -->
+            <div class="auth-step" id="step3">
+                <div class="auth-header">
+                    <div class="success-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h2>Registration Successful!</h2>
+                    <p>Welcome to the premium car care family.</p>
+                </div>
+                <div class="auth-summary">
+                    <p>You can now access your dashboard to view nearby partners, buy a single wash, or subscribe to a monthly plan.</p>
+                </div>
+                <button class="btn btn-primary btn-full" onclick="redirectToDashboard()">
+                    Go to Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/auth.js"></script>
     <script src="assets/js/script.js"></script>
 </body>
 </html>
