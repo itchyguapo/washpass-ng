@@ -168,6 +168,45 @@ const Auth = {
         });
     },
 
+    // Coming Soon Alert
+    comingSoon(feature) {
+        if (typeof showNotification === 'function') {
+            showNotification(feature + " is coming soon! 🚧", "info");
+        } else {
+            alert(feature + " is coming soon! 🚧");
+        }
+    },
+
+    // Native GPS Location Request
+    requestLocation() {
+        const textEl = document.getElementById('userLocationText');
+        if (!navigator.geolocation) {
+            textEl.textContent = "GPS Not Supported";
+            return;
+        }
+        
+        textEl.textContent = "Locating...";
+        
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                // In a real app we'd reverse geocode here based on lat/lng.
+                // For the prototype, we simulate a successful local match.
+                textEl.textContent = "📍 Lekki Phase 1, Lagos";
+                if (typeof showNotification === 'function') {
+                    showNotification("Location synced successfully!", "success");
+                }
+            },
+            (error) => {
+                let msg = "Location Off";
+                if (error.code === error.PERMISSION_DENIED) msg = "Permission Denied";
+                textEl.textContent = msg;
+                if (typeof showNotification === 'function') {
+                    showNotification("Location access denied.", "error");
+                }
+            }
+        );
+    },
+
     // Sync Data with Firestore
     syncUserData(uid, phone) {
         const userRef = db.collection('customers').doc(uid);

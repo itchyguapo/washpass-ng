@@ -6,9 +6,9 @@
 }
 
 :root {
-    /* True Black & Electric Blue Palette */
-    --primary: #3B82F6;
-    --primary-glow: rgba(59, 130, 246, 0.4);
+    /* Super Black & Neon Green Palette */
+    --primary: #00E676; /* Toxic Neon Green */
+    --primary-glow: rgba(0, 230, 118, 0.4);
     --accent: #F59E0B;
     --bg-app: #050505; /* True Black */
     --card-bg: #111111; /* Rich Black */

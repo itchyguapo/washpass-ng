@@ -89,9 +89,9 @@ function renderVehicles(vehicles) {
                 ${index === 0 ? '<span class="vehicle-badge primary">Primary</span>' : ''}
             </div>
             <div class="vehicle-details">
-                <h4>${v.model}</h4>
-                <p class="license-plate">${v.plate}</p>
-                <p class="vehicle-color">${v.color}</p>
+                <h4 style="font-weight: 800; font-size: 16px;">${v.year || ''} ${v.make || ''} ${v.model}</h4>
+                <p class="license-plate" style="color: var(--primary); font-family: monospace; font-size: 14px; margin-top: 4px;">${v.plate}</p>
+                <p class="vehicle-color" style="color: var(--text-muted); font-size: 12px; margin-top: 2px;">Color: ${v.color}</p>
             </div>
             <div class="vehicle-stats">
                 <div class="stat">
@@ -186,7 +186,9 @@ function handleAddVehicle(event) {
     event.preventDefault();
     
     const vehicle = {
+        make: document.getElementById('vehicleMake').value,
         model: document.getElementById('vehicleModel').value,
+        year: document.getElementById('vehicleYear').value,
         plate: document.getElementById('vehiclePlate').value,
         color: document.getElementById('vehicleColor').value
     };

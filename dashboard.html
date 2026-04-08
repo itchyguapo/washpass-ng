@@ -31,7 +31,9 @@
                     <img src="https://picsum.photos/seed/anderson/100/100" alt="Ade" class="user-avatar">
                     <div class="user-text">
                         <h2 class="user-name">Ade</h2>
-                        <p><i class="fas fa-map-marker-alt"></i> Lekki Phase 1, Lagos</p>
+                        <div class="location-pill" onclick="Auth.requestLocation()" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 230, 118, 0.1); padding: 4px 10px; border-radius: 20px; color: var(--primary); font-size: 12px; font-weight: 600; margin-top: 4px;">
+                            <i class="fas fa-map-marker-alt"></i> <span id="userLocationText">Location off</span>
+                        </div>
                     </div>
                 </div>
                 <div class="header-actions">
@@ -51,93 +53,69 @@
                 <button class="btn">Book Now</button>
             </div>
 
-            <!-- Categories -->
+            <!-- Subscriptions & Plans -->
             <div class="section-title">
-                <h3>Categories</h3>
-                <a href="#" class="see-all">See All</a>
+                <h3 style="font-weight: 800; font-size: 20px;">Wash Plans</h3>
             </div>
-            <div class="categories-grid">
-                <div class="category-card" onclick="switchSection('packages')">
-                    <div class="category-icon"><i class="fas fa-car-wash"></i></div>
-                    <span>Car Wash</span>
-                </div>
-                <div class="category-card">
-                    <div class="category-icon"><i class="fas fa-tools"></i></div>
-                    <span>Detailing</span>
-                </div>
-                <div class="category-card">
-                    <div class="category-icon"><i class="fas fa-warehouse"></i></div>
-                    <span>Garage</span>
-                </div>
-            </div>
-
-            <!-- Services -->
-            <div class="section-title">
-                <h3>Services</h3>
-                <a href="#" class="see-all">See All</a>
-            </div>
-            <div class="services-list">
-                <div class="service-card">
-                    <img src="https://picsum.photos/seed/carspa/200/200" alt="Car Spa" class="service-img">
-                    <div class="service-info">
-                        <div class="service-header">
-                            <h4>Premium Exterior Wash</h4>
-                            <span class="text-primary font-bold">₦4,500</span>
-                        </div>
-                        <div class="service-meta">
-                            <span><i class="far fa-clock"></i> 40 min</span>
-                            <span><i class="far fa-star"></i> 50 XP</span>
-                        </div>
-                        <div class="service-footer">
-                            <button class="book-btn">Book Now</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- More services can be added dynamically -->
-            </div>
-        </section>
-
-        <!-- Packages Section (Product List) -->
-        <section id="packages" class="app-section">
-            <header class="app-header">
-                <button class="icon-btn" onclick="switchSection('home')">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <h3>Car Wash</h3>
-                <button class="icon-btn" onclick="switchSection('cart')">
-                    <i class="fas fa-shopping-cart"></i>
-                </button>
-            </header>
             
-            <div class="packages-list">
-                <!-- Silver Package -->
-                <div class="product-card">
-                    <div class="product-header">
-                        <h4>The Silver Package</h4>
-                        <p>Advanced exterior wash & interior vacuum</p>
+            <div class="plans-container" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 20px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+                
+                <!-- Single Wash Vector Card -->
+                <div class="plan-card glass-panel" style="min-width: 260px; scroll-snap-align: center; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 24px; padding: 24px; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -20px; right: -20px; font-size: 120px; color: rgba(255,255,255,0.01);"><i class="fas fa-tint"></i></div>
+                    <div class="plan-icon" style="height: 50px; width: 50px; border-radius: 16px; background: rgba(0, 230, 118, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px;">
+                        <i class="fas fa-hand-sparkles"></i>
                     </div>
-                    <img src="assets/images/silver_car.png" alt="Silver Package" class="product-img">
-                    <div class="product-specs">
-                        <div class="spec"><span>Duration</span><p>45 Mins</p></div>
-                        <div class="spec"><span>Price</span><p>₦12,500</p></div>
+                    <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">Single Premium Wash</h4>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px; min-height: 40px;">On-demand deep exterior wash & interior clean.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 20px; font-weight: 800; color: var(--white);">₦4,500</span>
+                        <button class="btn-pill" style="width: auto; padding: 10px 20px; font-size: 14px;" onclick="addToCart('Single Wash', 4500)">Add</button>
                     </div>
-                    <button class="next-btn" onclick="addToCart('Silver Package', 12500)">Next</button>
                 </div>
 
-                <!-- Golden Package -->
-                <div class="product-card">
-                    <div class="product-header">
-                        <h4>The Golden Package</h4>
-                        <p>Full detailing with premium wax & engine shine</p>
+                <!-- Silver Plan Vector Card -->
+                <div class="plan-card glass-panel" style="min-width: 260px; scroll-snap-align: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(0, 230, 118, 0.2); border-radius: 24px; padding: 24px; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -20px; right: -20px; font-size: 120px; color: rgba(0, 230, 118, 0.03);"><i class="fas fa-shield-alt"></i></div>
+                    <div class="plan-icon" style="height: 50px; width: 50px; border-radius: 16px; background: var(--primary); color: var(--bg-app); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px; box-shadow: 0 0 15px var(--primary-glow);">
+                        <i class="fas fa-shield-alt"></i>
                     </div>
-                    <img src="assets/images/golden_car.png" alt="Golden Package" class="product-img">
-                    <div class="product-specs">
-                        <div class="spec"><span>Duration</span><p>2 Hours</p></div>
-                        <div class="spec"><span>Price</span><p>₦25,000</p></div>
+                    <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">Silver Subscription</h4>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px; min-height: 40px;">2 Washes/month + Engine Bay detailing.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 20px; font-weight: 800; color: var(--white);">₦12,500<span style="font-size: 12px; color: var(--text-muted);">/mo</span></span>
+                        <button class="btn-pill-outline" style="width: auto; padding: 10px 20px; font-size: 14px; border-color: var(--primary); color: var(--primary);" onclick="addToCart('Silver Plan', 12500)">Subscribe</button>
                     </div>
-                    <button class="next-btn" onclick="addToCart('Golden Package', 25000)">Next</button>
+                </div>
+
+                <!-- Gold Plan Vector Card -->
+                <div class="plan-card glass-panel" style="min-width: 260px; scroll-snap-align: center; background: rgba(255,255,255,0.02); border: 1px solid #F59E0B; border-radius: 24px; padding: 24px; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -20px; right: -20px; font-size: 120px; color: rgba(245, 158, 11, 0.03);"><i class="fas fa-crown"></i></div>
+                    <div class="plan-icon" style="height: 50px; width: 50px; border-radius: 16px; background: #F59E0B; color: var(--bg-app); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px; box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">Gold Subscription</h4>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px; min-height: 40px;">Unlimited Washes + Premium Waxing.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 20px; font-weight: 800; color: var(--white);">₦25,000<span style="font-size: 12px; color: var(--text-muted);">/mo</span></span>
+                        <button class="btn-pill-outline" style="width: auto; padding: 10px 20px; font-size: 14px; border-color: #F59E0B; color: #F59E0B;" onclick="addToCart('Gold Plan', 25000)">Subscribe</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Coming Soon Detailing & Garage -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px; margin-bottom: 30px;">
+                <div onclick="Auth.comingSoon('Detailing')" class="category-card" style="background: rgba(255,255,255,0.02); border-radius: 20px; padding: 20px; text-align: center; border: 1px solid var(--card-border); cursor: pointer;">
+                    <i class="fas fa-tools" style="font-size: 32px; color: var(--text-muted); margin-bottom: 10px;"></i>
+                    <h4 style="font-size: 14px; font-weight: 700;">Detailing</h4>
+                </div>
+                <div onclick="switchSection('profile')" class="category-card" style="background: rgba(255,255,255,0.02); border-radius: 20px; padding: 20px; text-align: center; border: 1px solid var(--card-border); cursor: pointer;">
+                    <i class="fas fa-warehouse" style="font-size: 32px; color: var(--primary); margin-bottom: 10px;"></i>
+                    <h4 style="font-size: 14px; font-weight: 700;">Garage</h4>
                 </div>
             </div>
+
         </section>
 
         <!-- Cart Section -->
@@ -210,7 +188,7 @@
                 
                 <div class="splash-actions">
                     <button class="pay-btn btn-pill" onclick="openAuthModal()" style="font-size: 18px; font-weight: 700; height: 56px;">
-                        Enter Phone to Begin
+                        Enter phone number to begin
                     </button>
                 </div>
             </div>
@@ -329,18 +307,38 @@
             </div>
             <form id="addVehicleForm" onsubmit="handleAddVehicle(event)">
                 <div class="form-group" style="margin-bottom: 16px;">
-                    <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">Vehicle Make & Model</label>
-                    <input type="text" id="vehicleModel" placeholder="e.g. Toyota Camry" required style="width: 100%; padding: 14px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none;">
+                    <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">Make</label>
+                    <select id="vehicleMake" required style="width: 100%; padding: 14px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none; appearance: none;">
+                        <option value="" disabled selected>Select Make</option>
+                        <option value="Toyota">Toyota</option>
+                        <option value="Honda">Honda</option>
+                        <option value="Mercedes-Benz">Mercedes-Benz</option>
+                        <option value="Lexus">Lexus</option>
+                        <option value="BMW">BMW</option>
+                        <option value="Hyundai">Hyundai</option>
+                        <option value="Kia">Kia</option>
+                        <option value="Other">Other</option>
+                    </select>
                 </div>
                 <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">Model</label>
+                    <input type="text" id="vehicleModel" placeholder="e.g. Camry" required style="width: 100%; padding: 14px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none;">
+                </div>
+                <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">Year</label>
+                        <input type="number" id="vehicleYear" placeholder="2020" min="1990" max="2027" required style="width: 100%; padding: 14px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none;">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">Color</label>
+                        <input type="text" id="vehicleColor" placeholder="Silver" required style="width: 100%; padding: 14px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none;">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 24px;">
                     <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">License Plate</label>
                     <input type="text" id="vehiclePlate" placeholder="ABC-123-GH" required style="width: 100%; padding: 14px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none;">
                 </div>
-                <div class="form-group" style="margin-bottom: 24px;">
-                    <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">Color</label>
-                    <input type="text" id="vehicleColor" placeholder="Silver" required style="width: 100%; padding: 14px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none;">
-                </div>
-                <button type="submit" class="pay-btn" style="margin-top: 10px;">
+                <button type="submit" class="pay-btn btn-pill" style="margin-top: 10px;">
                     Save to Garage
                 </button>
             </form>
