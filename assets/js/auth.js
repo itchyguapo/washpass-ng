@@ -105,7 +105,8 @@ const Auth = {
         if (!user || (!user.isLoggedIn && !user.name)) {
             // Redirect to index if on a protected page
             const path = window.location.pathname;
-            if (path.includes('dashboard.html') || path.includes('admin-panel.html')) {
+            // Bypass redirect for dashboard.html so the new SPA can be viewed without forced login
+            if (path.includes('admin-panel.html')) {
                 window.location.href = 'index.html';
             }
         }

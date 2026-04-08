@@ -6,21 +6,21 @@
 }
 
 :root {
-    /* Midnight Dark Palette */
+    /* True Black & Electric Blue Palette */
     --primary: #3B82F6;
     --primary-glow: rgba(59, 130, 246, 0.4);
     --accent: #F59E0B;
-    --bg-app: #0F172A; /* Deep Midnight */
-    --card-bg: #1E293B; /* Slate Charcoal */
+    --bg-app: #050505; /* True Black */
+    --card-bg: #111111; /* Rich Black */
     --text-main: #F8FAFC;
-    --text-muted: #94A3B8;
+    --text-muted: #64748B;
     --white: #FFFFFF;
     
     /* Dark Mode Glassmorphism */
-    --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.3);
-    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
-    --glass-bg: rgba(30, 41, 59, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.5);
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.8);
+    --glass-bg: rgba(17, 17, 17, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.05);
     
     /* Radius & Spacing */
     --radius-full: 9999px;

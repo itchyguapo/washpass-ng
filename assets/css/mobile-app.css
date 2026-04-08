@@ -419,3 +419,179 @@
 .font-bold { font-weight: 700; }
 .text-primary { color: var(--primary); }
 .bg-glass { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); }
+
+/* Bottom Sheet Modals */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+    animation: fadeInModal 0.3s ease forwards;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content.bottom-sheet {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 480px;
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px;
+    transform: translateY(100%);
+    animation: slideUpSheet 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@keyframes slideUpSheet {
+    to { transform: translateY(0); }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.modal-header h2, .modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.modal-close {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Welcome Login Screen */
+.welcome-brand {
+    text-align: center;
+    margin: 60px 0 40px;
+}
+
+.welcome-brand i {
+    font-size: 64px;
+    color: var(--primary);
+    margin-bottom: 16px;
+    filter: drop-shadow(0 0 20px var(--primary-glow));
+}
+
+.welcome-brand h1 {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+.welcome-form {
+    background: var(--card-bg);
+    padding: 30px 20px;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: var(--shadow-card);
+}
+
+.welcome-form p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.input-group {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    padding: 6px 16px;
+    margin-bottom: 24px;
+}
+
+.input-group span {
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-right: 12px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding-right: 12px;
+}
+
+.input-group input {
+    background: transparent;
+    border: none;
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    padding: 12px 0;
+    outline: none;
+}
+
+/* Cart Badge */
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: 15px;
+    background: #EF4444; /* Bright Red */
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+    border: 2px solid var(--card-bg);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); }
+    80% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* HTML5-QRCode UI Overrides */
+#qr-reader {
+    border: none !important;
+}
+
+#qr-reader__scan_region {
+    background: black;
+    border-radius: 12px;
+}
+
+#qr-reader__dashboard_section_csr span {
+    color: var(--white) !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+#qr-reader__dashboard_section_swaplink {
+    color: var(--primary) !important;
+    text-decoration: none !important;
+    font-weight: bold;
+}

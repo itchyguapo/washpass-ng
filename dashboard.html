@@ -2,15 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="assets/images/pwa-icon.png">
+    <link rel="manifest" href="manifest.json">
+    <!-- Prevent caching during development -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>WashPass NG | Premium Car Care</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/mobile-app.css">
-    <link rel="stylesheet" href="assets/css/car-theme.css">
+    <link rel="stylesheet" href="assets/css/styles.css?v=2.0">
+    <link rel="stylesheet" href="assets/css/mobile-app.css?v=2.0">
+    <link rel="stylesheet" href="assets/css/car-theme.css?v=2.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Real QR Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
     <div class="app-shell">
@@ -189,15 +199,37 @@
             </div>
         </section>
 
+        <!-- Welcome / Login Section (First Timer) -->
+        <section id="welcome" class="app-section">
+            <div class="welcome-brand">
+                <i class="fas fa-car-side"></i>
+                <h1>WashPass <span style="color: var(--primary);">NG</span></h1>
+                <p style="color: var(--text-muted); margin-top: 8px;">Premium Car Care, Simplified.</p>
+            </div>
+
+            <div class="welcome-form">
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px;">Get Started</h3>
+                <p>Enter your phone number to access your garage or book a wash.</p>
+                
+                <div class="input-group">
+                    <span>+234</span>
+                    <input type="tel" id="welcomePhone" placeholder="801 234 5678" maxlength="11">
+                </div>
+
+                <button class="pay-btn" onclick="handleSPALogin()" style="margin-top: 0;">Continue</button>
+            </div>
+        </section>
+
         <!-- Bottom Navigation -->
-        <nav class="bottom-nav">
+        <nav class="bottom-nav" id="bottomNav" style="display: none;">
             <a href="javascript:void(0)" class="nav-item active" onclick="switchSection('home')">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </a>
-            <a href="javascript:void(0)" class="nav-item" onclick="switchSection('cart')">
+            <a href="javascript:void(0)" class="nav-item" onclick="switchSection('cart')" style="position: relative;">
                 <i class="fas fa-shopping-cart"></i>
                 <span>Cart</span>
+                <span id="cartBadge" class="cart-badge" style="display: none;">0</span>
             </a>
             <div class="nav-item nav-item-scan">
                 <button class="scan-btn" onclick="showQRScanner()">
@@ -217,21 +249,19 @@
 
     <!-- QR Scanner Modal (Existing Feature) -->
     <div id="qrModal" class="modal">
-        <div class="modal-content auth-modal">
+        <div class="modal-content bottom-sheet">
             <div class="modal-header">
-                <h3>Scan QR Code to Wash</h3>
+                <h3>Scan QR Code</h3>
                 <button class="modal-close" onclick="closeQRScanner()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="qr-scanner">
+            <div class="modal-body" style="padding-bottom: 20px;">
+                <div id="qr-reader" style="width: 100%; border-radius: 16px; overflow: hidden; background: black;"></div>
+                <div class="qr-scanner" id="qrScannerPlaceholder" style="background: rgba(255,255,255,0.02); padding: 40px; border-radius: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.1); margin-top: 10px; display: none;">
                     <div class="scanner-frame">
-                        <div class="scanner-line"></div>
-                        <div class="qr-placeholder">
-                            <i class="fas fa-qrcode"></i>
-                            <p>Position QR code within frame</p>
-                        </div>
+                        <i class="fas fa-qrcode" style="font-size: 80px; color: var(--primary); margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--primary-glow));"></i>
+                        <p style="color: var(--text-muted); font-size: 14px;">Initializing Camera...</p>
                     </div>
                 </div>
             </div>
@@ -240,27 +270,27 @@
 
     <!-- Add Vehicle Modal (Existing Feature) -->
     <div id="vehicleModal" class="modal">
-        <div class="modal-content auth-modal">
+        <div class="modal-content bottom-sheet">
             <div class="modal-header">
                 <h2>Add Vehicle</h2>
                 <button class="modal-close" onclick="closeAddVehicleModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form id="addVehicleForm" onsubmit="handleAddVehicle(event)" style="padding: 20px;">
+            <form id="addVehicleForm" onsubmit="handleAddVehicle(event)">
                 <div class="form-group" style="margin-bottom: 16px;">
-                    <label style="display: block; font-size: 13px; margin-bottom: 6px;">Vehicle Make & Model</label>
-                    <input type="text" id="vehicleModel" placeholder="e.g. Toyota Camry" class="form-input" required style="width: 100%; padding: 12px; border: 1px solid var(--bg-app); border-radius: 8px;">
+                    <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">Vehicle Make & Model</label>
+                    <input type="text" id="vehicleModel" placeholder="e.g. Toyota Camry" required style="width: 100%; padding: 14px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none;">
                 </div>
                 <div class="form-group" style="margin-bottom: 16px;">
-                    <label style="display: block; font-size: 13px; margin-bottom: 6px;">License Plate</label>
-                    <input type="text" id="vehiclePlate" placeholder="ABC-123-GH" class="form-input" required style="width: 100%; padding: 12px; border: 1px solid var(--bg-app); border-radius: 8px;">
+                    <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">License Plate</label>
+                    <input type="text" id="vehiclePlate" placeholder="ABC-123-GH" required style="width: 100%; padding: 14px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none;">
                 </div>
                 <div class="form-group" style="margin-bottom: 24px;">
-                    <label style="display: block; font-size: 13px; margin-bottom: 6px;">Color</label>
-                    <input type="text" id="vehicleColor" placeholder="Silver" class="form-input" required style="width: 100%; padding: 12px; border: 1px solid var(--bg-app); border-radius: 8px;">
+                    <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">Color</label>
+                    <input type="text" id="vehicleColor" placeholder="Silver" required style="width: 100%; padding: 14px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none;">
                 </div>
-                <button type="submit" class="btn" style="width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700;">
+                <button type="submit" class="pay-btn" style="margin-top: 10px;">
                     Save to Garage
                 </button>
             </form>
@@ -276,9 +306,22 @@
         <div class="loading-text">Revving up...</div>
     </div>
 
-    <!-- Scripts -->
-    <script src="assets/js/auth.js"></script>
-    <script src="assets/js/app-router.js"></script>
-    <script src="assets/js/dashboard.js"></script>
+    <!-- Scripts (with cache-busters) -->
+    <script src="assets/js/auth.js?v=2.0"></script>
+    <script src="assets/js/app-router.js?v=2.0"></script>
+    <script src="assets/js/dashboard.js?v=2.0"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(registration => {
+                    console.log('SW registered: ', registration);
+                }).catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
+            });
+        }
+    </script>
 </body>
 </html>

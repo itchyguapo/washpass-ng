@@ -273,15 +273,47 @@ function showNotification(message, type) {
     }, 3000);
 }
 
-// QR Scanner Placeholder Functions
+// QR Scanner Logic
+let html5QrcodeScanner = null;
+
 function showQRScanner() {
     const modal = document.getElementById('qrModal');
     if (modal) modal.classList.add('active');
+    
+    // Hide placeholder
+    const placeholder = document.getElementById('qrScannerPlaceholder');
+    if(placeholder) placeholder.style.display = 'none';
+
+    // Initialize real camera scanner
+    if (!html5QrcodeScanner) {
+        html5QrcodeScanner = new Html5QrcodeScanner(
+            "qr-reader", { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 }
+        );
+        
+        html5QrcodeScanner.render((decodedText) => {
+            // On success
+            if (navigator.vibrate) navigator.vibrate([100]); // Success haptic
+            alert(`QR Code Scanned: ${decodedText}`);
+            closeQRScanner();
+        }, (errorMessage) => {
+            // Ignore scan failures (happens every frame it doesn't see a code)
+        });
+    }
 }
 
 function closeQRScanner() {
     const modal = document.getElementById('qrModal');
     if (modal) modal.classList.remove('active');
+    
+    // Optional: Stop scanner to save battery, but for rapid scanning MVP keep it alive or clear it
+    if (html5QrcodeScanner) {
+        try {
+            html5QrcodeScanner.clear();
+            html5QrcodeScanner = null;
+        } catch (e) {
+            console.log("Scanner clear error", e);
+        }
+    }
 }
 
 function handleLogout() {

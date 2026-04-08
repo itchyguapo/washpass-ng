@@ -26,11 +26,28 @@ function switchSection(sectionId) {
         section.classList.remove('active');
     });
 
+    // Handle Auth default for first timers
+    const user = Auth.getUser();
+    if (!user || (!user.isLoggedIn && !user.name)) {
+        sectionId = 'welcome';
+    }
+
     // Show target section
     const targetSection = document.getElementById(sectionId);
     if (targetSection) {
         targetSection.classList.add('active');
-        window.scrollTo(0, 0);
+        state.currentSection = sectionId;
+        window.location.hash = sectionId;
+    }
+
+    // Toggle Bottom Nav Visibility (Hide on Welcome)
+    const bottomNav = document.getElementById('bottomNav');
+    if (bottomNav) {
+        if (sectionId === 'welcome') {
+            bottomNav.style.display = 'none';
+        } else {
+            bottomNav.style.display = 'flex';
+        }
     }
 
     // Update Bottom Nav UI
@@ -56,8 +73,20 @@ function switchSection(sectionId) {
  */
 function addToCart(name, price) {
     state.cart.push({ name, price, id: Date.now() });
-    alert(`${name} added to cart!`);
-    switchSection('cart');
+    
+    // Update Notification Badge instead of jumping to cart
+    const badge = document.getElementById('cartBadge');
+    if (badge) {
+        badge.textContent = state.cart.length;
+        badge.style.display = 'flex';
+        // Re-trigger animation
+        badge.style.animation = 'none';
+        badge.offsetHeight; // trigger reflow
+        badge.style.animation = 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    }
+    
+    // Vibrate device if supported to provide premium haptic feedback
+    if (navigator.vibrate) navigator.vibrate([50]);
 }
 
 /**
@@ -108,11 +137,43 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.user-name').forEach(el => el.textContent = user.name || 'Ade');
     }
 
-    // Check for initial hash or default to home
+    // Check for initial hash or default logic
     const hash = window.location.hash.replace('#', '');
-    if (hash && document.getElementById(hash)) {
+    const userLoggedIn = user && user.isLoggedIn;
+    
+    if (hash && document.getElementById(hash) && hash !== 'welcome' && userLoggedIn) {
         switchSection(hash);
+    } else if (!userLoggedIn) {
+        switchSection('welcome'); // The router will auto-redirect to welcome if not logged in
     } else {
         switchSection('home');
     }
 });
+
+// Native SPA Login Flow
+function handleSPALogin() {
+    const phoneInput = document.getElementById('welcomePhone');
+    if (!phoneInput || !phoneInput.value) {
+        alert("Please enter a valid phone number.");
+        return;
+    }
+
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    btn.disabled = true;
+
+    // Simulate login network delay
+    setTimeout(() => {
+        Auth.login('Ade', phoneInput.value); // Use local identity for demo
+        
+        // Update header Data
+        document.querySelectorAll('.user-name').forEach(el => el.textContent = 'Ade');
+        
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        
+        // Slide instantly into the dashboard
+        switchSection('home');
+    }, 1500);
+}
