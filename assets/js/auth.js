@@ -176,29 +176,33 @@ const Auth = {
     // Native GPS Location Request
     requestLocation() {
         const textEl = document.getElementById('userLocationText');
+        const locPill = document.getElementById('locationsPill');
         if (!navigator.geolocation) {
-            textEl.textContent = "GPS Not Supported";
+            if (textEl) textEl.textContent = "GPS Not Supported";
             return;
         }
         
-        textEl.textContent = "Locating...";
+        if (textEl) textEl.textContent = "Locating...";
+        if (locPill) locPill.textContent = "Locating...";
         
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                // In a real app we'd reverse geocode here based on lat/lng.
-                // For the prototype, we simulate a successful local match.
-                textEl.textContent = "📍 Lekki Phase 1, Lagos";
-                if (typeof showNotification === 'function') {
-                    showNotification("Location synced successfully!", "success");
+                // Real app would reverse geocode here.
+                const locationStr = '\uD83D\uDCCD Lekki Phase 1, Lagos';
+                if (textEl) textEl.textContent = locationStr;
+                if (locPill) locPill.textContent = locationStr;
+                // Persist location to Firestore
+                if (this.currentUser) {
+                    db.collection('customers').doc(this.currentUser.uid).update({ location: locationStr }).catch(() => {});
                 }
+                if (typeof showNotification === 'function') showNotification("Location synced!", "success");
             },
             (error) => {
                 let msg = "Location Off";
                 if (error.code === error.PERMISSION_DENIED) msg = "Permission Denied";
-                textEl.textContent = msg;
-                if (typeof showNotification === 'function') {
-                    showNotification("Location access denied.", "error");
-                }
+                if (textEl) textEl.textContent = msg;
+                if (locPill) locPill.textContent = msg;
+                if (typeof showNotification === 'function') showNotification("Location access denied.", "error");
             }
         );
     },
@@ -212,6 +216,8 @@ const Auth = {
                 // Create new customer profile
                 userRef.set({
                     phone: phone,
+                    points: 0,
+                    washes: 0,
                     joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     status: 'active'
                 });
@@ -221,6 +227,16 @@ const Auth = {
                 document.getElementById('name-input-step').style.display = 'block';
             } else {
                 const data = doc.data();
+                // Populate stats
+                const pts = document.getElementById('statPoints');
+                const wsh = document.getElementById('statWashes');
+                if (pts) pts.textContent = (data.points || 0).toLocaleString();
+                if (wsh) wsh.textContent = (data.washes || 0).toLocaleString();
+
+                // Sync location pill on Near Me page
+                const locPill = document.getElementById('locationsPill');
+                if (locPill && data.location) locPill.textContent = data.location;
+
                 if (!data.name) {
                     // Profile exists but no name yet
                     document.getElementById('phone-input-step').style.display = 'none';

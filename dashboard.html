@@ -160,12 +160,12 @@
                 <div class="stat-card" style="flex: 1; padding: 16px; background: rgba(0, 230, 118, 0.05); border: 1px solid rgba(0, 230, 118, 0.1); border-radius: 20px; text-align: center;">
                     <i class="fas fa-star" style="color: var(--primary); font-size: 16px; margin-bottom: 4px; filter: drop-shadow(0 0 5px var(--primary-glow));"></i>
                     <span style="display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Points</span>
-                    <p style="font-size: 22px; font-weight: 800; margin: 4px 0; color: var(--primary);">2,450</p>
+                    <p id="statPoints" style="font-size: 22px; font-weight: 800; margin: 4px 0; color: var(--primary);">0</p>
                 </div>
                 <div class="stat-card" style="flex: 1; padding: 16px; background: rgba(0, 230, 118, 0.05); border: 1px solid rgba(0, 230, 118, 0.1); border-radius: 20px; text-align: center;">
                     <i class="fas fa-car-side" style="color: var(--primary); font-size: 16px; margin-bottom: 4px; filter: drop-shadow(0 0 5px var(--primary-glow));"></i>
                     <span style="display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Washes</span>
-                    <p style="font-size: 22px; font-weight: 800; margin: 4px 0; color: var(--primary);">12</p>
+                    <p id="statWashes" style="font-size: 22px; font-weight: 800; margin: 4px 0; color: var(--primary);">0</p>
                 </div>
             </div>
 
@@ -266,33 +266,128 @@
                     <i class="fas fa-qrcode"></i>
                 </button>
             </div>
-            <a href="javascript:void(0)" class="nav-item">
-                <i class="fas fa-th-large"></i>
-                <span>Categories</span>
+            <a href="javascript:void(0)" class="nav-item" onclick="switchSection('locations')">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Near Me</span>
             </a>
             <a href="javascript:void(0)" class="nav-item" onclick="switchSection('profile')">
                 <i class="fas fa-user"></i>
-                <span>Profile</span>
+                <span>Garage</span>
             </a>
         </nav>
+
+        <!-- Locations / Near Me Section -->
+        <section id="locations" class="app-section">
+            <header class="app-header">
+                <button class="icon-btn" onclick="switchSection('home')">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3>Car Washes Near You</h3>
+                <button class="icon-btn" id="locationRefreshBtn" onclick="Auth.requestLocation()">
+                    <i class="fas fa-crosshairs"></i>
+                </button>
+            </header>
+
+            <div style="display: flex; align-items: center; gap: 8px; background: rgba(0,230,118,0.05); border: 1px solid rgba(0,230,118,0.1); border-radius: 20px; padding: 12px 16px; margin-bottom: 20px;">
+                <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
+                <span id="locationsPill" style="font-size: 13px; font-weight: 600; color: var(--primary);">Detecting location...</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 14px; padding-bottom: 100px;">
+
+                <!-- Partner Center 1 -->
+                <div onclick="Auth.comingSoon('Online Booking')" style="display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; cursor: pointer; transition: all 0.2s;">
+                    <div style="height: 52px; width: 52px; min-width: 52px; border-radius: 16px; background: rgba(0,230,118,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--primary);">
+                        <i class="fas fa-car-wash"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 2px;">WashPass Lekki Hub</h4>
+                        <p style="font-size: 12px; color: var(--text-muted);"><i class="fas fa-map-marker-alt" style="margin-right: 4px;"></i>Lekki Phase 1 &bull; 0.4 km away</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 11px; background: rgba(0,230,118,0.15); color: var(--primary); padding: 3px 10px; border-radius: 20px; font-weight: 700;">Open</span>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">⭐ 4.9</p>
+                    </div>
+                </div>
+
+                <!-- Partner Center 2 -->
+                <div onclick="Auth.comingSoon('Online Booking')" style="display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; cursor: pointer; transition: all 0.2s;">
+                    <div style="height: 52px; width: 52px; min-width: 52px; border-radius: 16px; background: rgba(245,158,11,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #F59E0B;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 2px;">AutoSpa Victoria Island</h4>
+                        <p style="font-size: 12px; color: var(--text-muted);"><i class="fas fa-map-marker-alt" style="margin-right: 4px;"></i>V.I. &bull; 1.8 km away</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 11px; background: rgba(0,230,118,0.15); color: var(--primary); padding: 3px 10px; border-radius: 20px; font-weight: 700;">Open</span>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">⭐ 4.7</p>
+                    </div>
+                </div>
+
+                <!-- Partner Center 3 -->
+                <div onclick="Auth.comingSoon('Online Booking')" style="display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; cursor: pointer; transition: all 0.2s;">
+                    <div style="height: 52px; width: 52px; min-width: 52px; border-radius: 16px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--text-muted);">
+                        <i class="fas fa-soap"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 2px;">CleanRide Ikoyi</h4>
+                        <p style="font-size: 12px; color: var(--text-muted);"><i class="fas fa-map-marker-alt" style="margin-right: 4px;"></i>Ikoyi &bull; 3.1 km away</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 11px; background: rgba(255,255,255,0.05); color: var(--text-muted); padding: 3px 10px; border-radius: 20px; font-weight: 700;">Closed</span>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">⭐ 4.5</p>
+                    </div>
+                </div>
+
+                <!-- Partner Center 4 -->
+                <div onclick="Auth.comingSoon('Online Booking')" style="display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; cursor: pointer;">
+                    <div style="height: 52px; width: 52px; min-width: 52px; border-radius: 16px; background: rgba(0,230,118,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--primary);">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 2px;">AquaGloss Ajah</h4>
+                        <p style="font-size: 12px; color: var(--text-muted);"><i class="fas fa-map-marker-alt" style="margin-right: 4px;"></i>Ajah &bull; 4.2 km away</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 11px; background: rgba(0,230,118,0.15); color: var(--primary); padding: 3px 10px; border-radius: 20px; font-weight: 700;">Open</span>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">⭐ 4.6</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
     </div>
 
-    <!-- QR Scanner Modal (Existing Feature) -->
+    <!-- QR Scanner Modal (2026 HUD) -->
     <div id="qrModal" class="modal">
-        <div class="modal-content bottom-sheet">
-            <div class="modal-header">
-                <h3>Scan QR Code</h3>
-                <button class="modal-close" onclick="closeQRScanner()">
+        <div class="modal-content bottom-sheet" style="background: #050505;">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(0,230,118,0.1);">
+                <h3 style="color: var(--primary); letter-spacing: 2px; font-size: 14px; text-transform: uppercase; font-weight: 700;">WashPass Scan</h3>
+                <button class="modal-close" onclick="closeQRScanner()" style="color: var(--primary);">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body" style="padding-bottom: 20px;">
-                <div id="qr-reader" style="width: 100%; border-radius: 16px; overflow: hidden; background: black;"></div>
-                <div class="qr-scanner" id="qrScannerPlaceholder" style="background: rgba(255,255,255,0.02); padding: 40px; border-radius: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.1); margin-top: 10px; display: none;">
-                    <div class="scanner-frame">
-                        <i class="fas fa-qrcode" style="font-size: 80px; color: var(--primary); margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--primary-glow));"></i>
-                        <p style="color: var(--text-muted); font-size: 14px;">Initializing Camera...</p>
+            <div class="modal-body" style="padding-bottom: 20px; position: relative;">
+                <!-- Camera feed -->
+                <div style="position: relative; border-radius: 20px; overflow: hidden;">
+                    <div id="qr-reader" style="width: 100%; border-radius: 16px; overflow: hidden; background: black;"></div>
+                    <!-- HUD Overlay -->
+                    <div class="qr-hud-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                        <!-- Corner Reticles -->
+                        <div class="hud-corner hud-tl"></div>
+                        <div class="hud-corner hud-tr"></div>
+                        <div class="hud-corner hud-bl"></div>
+                        <div class="hud-corner hud-br"></div>
+                        <!-- Laser Scan Line -->
+                        <div class="hud-laser"></div>
                     </div>
+                </div>
+                <!-- Status Text -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <p style="color: var(--primary); font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">Scanning for QR Code...</p>
+                    <p style="color: var(--text-muted); font-size: 11px; margin-top: 6px;">Point camera at the WashPass QR code</p>
                 </div>
             </div>
         </div>

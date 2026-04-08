@@ -1,5 +1,46 @@
 /* Mobile-First App Layout */
+
+/* ===========================
+   2026 QR HUD Scanner Styles
+   =========================== */
+@keyframes laser-scan {
+    0% { top: 5%; }
+    50% { top: 90%; }
+    100% { top: 5%; }
+}
+
+@keyframes hud-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.hud-corner {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-color: #00E676;
+    border-style: solid;
+    border-width: 0;
+    animation: hud-pulse 2s infinite;
+}
+
+.hud-tl { top: 8px; left: 8px; border-top-width: 3px; border-left-width: 3px; box-shadow: -2px -2px 8px rgba(0,230,118,0.6); }
+.hud-tr { top: 8px; right: 8px; border-top-width: 3px; border-right-width: 3px; box-shadow: 2px -2px 8px rgba(0,230,118,0.6); }
+.hud-bl { bottom: 8px; left: 8px; border-bottom-width: 3px; border-left-width: 3px; box-shadow: -2px 2px 8px rgba(0,230,118,0.6); }
+.hud-br { bottom: 8px; right: 8px; border-bottom-width: 3px; border-right-width: 3px; box-shadow: 2px 2px 8px rgba(0,230,118,0.6); }
+
+.hud-laser {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00E676, transparent);
+    box-shadow: 0 0 12px #00E676, 0 0 4px #00E676;
+    animation: laser-scan 2.4s ease-in-out infinite;
+}
+
 /* Glassmorphism & Pill UI Updates */
+/* (same as before, just re-anchored below the new HUD block) */
 .btn-pill {
     background: var(--primary);
     color: var(--white);
