@@ -275,46 +275,52 @@ function showNotification(message, type) {
     }, 3000);
 }
 
-// QR Scanner Logic
-let html5QrcodeScanner = null;
+// QR Scanner Logic (Direct Camera - No Extra UI)
+let html5Qrcode = null;
 
 function showQRScanner() {
     const modal = document.getElementById('qrModal');
     if (modal) modal.classList.add('active');
-    
-    // Hide placeholder
-    const placeholder = document.getElementById('qrScannerPlaceholder');
-    if(placeholder) placeholder.style.display = 'none';
 
-    // Initialize real camera scanner
-    if (!html5QrcodeScanner) {
-        html5QrcodeScanner = new Html5QrcodeScanner(
-            "qr-reader", { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 }
-        );
-        
-        html5QrcodeScanner.render((decodedText) => {
-            // On success
-            if (navigator.vibrate) navigator.vibrate([100]); // Success haptic
-            alert(`QR Code Scanned: ${decodedText}`);
+    // Small delay to let the modal animate in before starting camera
+    setTimeout(() => {
+        if (html5Qrcode) return; // already running
+
+        html5Qrcode = new Html5Qrcode('qr-reader');
+
+        html5Qrcode.start(
+            { facingMode: 'environment' }, // use rear camera
+            { fps: 15, qrbox: { width: 240, height: 240 } },
+            (decodedText) => {
+                // Success: QR scanned
+                if (navigator.vibrate) navigator.vibrate([80, 40, 80]); // success haptic
+                showNotification('QR Code scanned! ✅', 'success');
+                closeQRScanner();
+                // TODO: process decodedText (e.g. validate wash token)
+                console.log('QR Code Data:', decodedText);
+            },
+            () => {
+                // Per-frame failure: normal, ignore silently
+            }
+        ).catch((err) => {
+            showNotification('Camera permission denied.', 'error');
             closeQRScanner();
-        }, (errorMessage) => {
-            // Ignore scan failures (happens every frame it doesn't see a code)
+            console.error('QR Start Error:', err);
         });
-    }
+    }, 350);
 }
 
 function closeQRScanner() {
     const modal = document.getElementById('qrModal');
     if (modal) modal.classList.remove('active');
-    
-    // Optional: Stop scanner to save battery, but for rapid scanning MVP keep it alive or clear it
-    if (html5QrcodeScanner) {
-        try {
-            html5QrcodeScanner.clear();
-            html5QrcodeScanner = null;
-        } catch (e) {
-            console.log("Scanner clear error", e);
-        }
+
+    if (html5Qrcode) {
+        html5Qrcode.stop().then(() => {
+            html5Qrcode.clear();
+            html5Qrcode = null;
+        }).catch(() => {
+            html5Qrcode = null;
+        });
     }
 }
 
