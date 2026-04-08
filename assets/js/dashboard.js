@@ -194,15 +194,18 @@ function handleAddVehicle(event) {
         color: document.getElementById('vehicleColor').value
     };
     
-    toggleCarLoader(true, "Parking in garage...");
+    toggleCarLoader(true, "Parking in cloud garage...");
     
-    setTimeout(() => {
-        Auth.addVehicle(vehicle);
-        updateDashboardUI(Auth.getUser());
+    Auth.addVehicle(vehicle).then(() => {
         toggleCarLoader(false);
         closeAddVehicleModal();
-        showNotification("Vehicle added successfully! 🚗", "success");
-    }, 1500);
+        showNotification("Vehicle added to your Cloud Garage! 🚗", "success");
+        event.target.reset();
+        if (navigator.vibrate) navigator.vibrate([50]);
+    }).catch(error => {
+        toggleCarLoader(false);
+        showNotification("Error saving vehicle: " + error.message, "error");
+    });
 }
 
 // Location Search & Scanning simulation

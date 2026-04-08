@@ -207,16 +207,31 @@
                 <p style="color: var(--text-muted); margin-top: 8px;">Premium Car Care, Simplified.</p>
             </div>
 
-            <div class="welcome-form">
+            <div class="welcome-form" id="phone-input-step">
                 <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px;">Get Started</h3>
-                <p>Enter your phone number to access your garage or book a wash.</p>
+                <p>Enter your phone number to receive a secure login code via SMS.</p>
                 
                 <div class="input-group">
                     <span>+234</span>
-                    <input type="tel" id="welcomePhone" placeholder="801 234 5678" maxlength="11">
+                    <input type="tel" id="welcomePhone" placeholder="801 234 5678" maxlength="10">
                 </div>
 
-                <button class="pay-btn" onclick="handleSPALogin()" style="margin-top: 0;">Continue</button>
+                <div id="recaptcha-container"></div>
+                <button class="pay-btn" onclick="Auth.sendOTP()" style="margin-top: 0;">Send PIN</button>
+            </div>
+
+            <!-- OTP Input Step (Hidden initially) -->
+            <div class="welcome-form" id="otp-input-step" style="display: none;">
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px;">Verify PIN</h3>
+                <p>Enter the 6-digit code we just sent to your phone.</p>
+                
+                <div class="input-group">
+                    <i class="fas fa-key" style="color: var(--text-muted); margin-right: 12px; padding-right: 12px; border-right: 1px solid rgba(255,255,255,0.1);"></i>
+                    <input type="number" id="otpCode" placeholder="123456" maxlength="6">
+                </div>
+
+                <button class="pay-btn" onclick="Auth.verifyOTP()" style="margin-top: 0;">Verify & Login</button>
+                <button class="btn" onclick="Auth.restartLogin()" style="width: 100%; margin-top: 16px; background: transparent; color: var(--text-muted);">Cancel</button>
             </div>
         </section>
 
@@ -305,6 +320,11 @@
         </div>
         <div class="loading-text">Revving up...</div>
     </div>
+
+    <!-- Firebase Compat SDKs (For static site without bundler) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <!-- Scripts (with cache-busters) -->
     <script src="assets/js/auth.js?v=2.0"></script>
