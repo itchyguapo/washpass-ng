@@ -28,6 +28,13 @@ const Auth = {
         return JSON.parse(localStorage.getItem(this.USER_KEY));
     },
 
+    // Find existing user by phone
+    findUser(phone) {
+        const user = this.getUser();
+        if (user && user.phone === phone) return user;
+        return null;
+    },
+
     // Save user data
     save(userData) {
         localStorage.setItem(this.USER_KEY, JSON.stringify(userData));
@@ -95,10 +102,10 @@ const Auth = {
     // Check if user is logged in
     checkAuth() {
         const user = this.getUser();
-        if (!user || !user.isLoggedIn) {
+        if (!user || (!user.isLoggedIn && !user.name)) {
             // Redirect to index if on a protected page
             const path = window.location.pathname;
-            if (path.includes('dashboard.html')) {
+            if (path.includes('dashboard.html') || path.includes('admin-panel.html')) {
                 window.location.href = 'index.html';
             }
         }

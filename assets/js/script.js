@@ -104,29 +104,52 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Intersection Observer for animations
+// Intersection Observer for 2026 Stats & Animations
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
 };
 
-const observer = new IntersectionObserver((entries) => {
+function animateStatCount(el, target) {
+    let current = 0;
+    const duration = 2000;
+    const step = target / (duration / 16);
+    
+    function update() {
+        current += step;
+        if (current < target) {
+            el.textContent = Math.floor(current).toLocaleString();
+            requestAnimationFrame(update);
+        } else {
+            el.textContent = target.toLocaleString();
+        }
+    }
+    update();
+}
+
+const scrollObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+            if (entry.target.classList.contains('h-stat')) {
+                const valEl = entry.target.querySelector('.stat-val');
+                const target = parseInt(entry.target.dataset.count);
+                if (valEl) animateStatCount(valEl, target);
+                scrollObserver.unobserve(entry.target);
+            }
+            entry.target.classList.add('visible');
         }
     });
 }, observerOptions);
 
-// Observe elements for animation
+// Initialize observers
 document.addEventListener('DOMContentLoaded', () => {
-    const animatedElements = document.querySelectorAll('.pricing-card, .step, .stat');
-    animatedElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
+    // Observe new 2026 stats
+    document.querySelectorAll('.h-stat').forEach(el => scrollObserver.observe(el));
+    
+    // Observe sections for reveal
+    document.querySelectorAll('.feature-card, .pricing-card, .how-it-works-step, section').forEach(el => {
+        el.classList.add('reveal-on-scroll');
+        scrollObserver.observe(el);
     });
 });
 
@@ -311,7 +334,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Auth Modal Logic
+// Auth Modal Switching (Login vs Register)
+function switchAuth(type) {
+    const registerFlow = document.getElementById('registerFlow');
+    const loginFlow = document.getElementById('loginFlow');
+    const tabs = document.querySelectorAll('.auth-tab');
+    
+    if (type === 'login') {
+        registerFlow.style.display = 'none';
+        loginFlow.style.display = 'block';
+        tabs[0].classList.remove('active');
+        tabs[1].classList.add('active');
+    } else {
+        registerFlow.style.display = 'block';
+        loginFlow.style.display = 'none';
+        tabs[0].classList.add('active');
+        tabs[1].classList.remove('active');
+    }
+}
+
+function handleLogin() {
+    const phone = document.getElementById('loginPhone').value;
+    if (!phone) {
+        showNotification("Please enter your phone number", "info");
+        return;
+    }
+    
+    const user = Auth.findUser(phone);
+    if (user) {
+        toggleCarLoader(true, "Parking and opening your garage...");
+        setTimeout(() => {
+            user.isLoggedIn = true;
+            Auth.save(user);
+            window.location.href = 'dashboard.html';
+        }, 1500);
+    } else {
+        showNotification("No account found with this number. Please register!", "error");
+    }
+}
 function getAuthModal() {
     return document.getElementById('authModal');
 }

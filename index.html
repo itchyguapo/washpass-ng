@@ -35,36 +35,44 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-container">
+        <div class="hero-container container">
             <div class="hero-content">
-                <div class="hero-badge">
-                    <i class="fas fa-star"></i>
-                    <span>#1 Car Wash Subscription in Nigeria</span>
+                <div class="badge-2026">
+                    <i class="fas fa-bolt"></i>
+                    <span>2026 INNOVATION WINNER</span>
                 </div>
-                <h1 class="hero-title">Unlimited Car Washes,<br>One Simple Pass</h1>
-                <p class="hero-subtitle">Premium car care at your fingertips. Wash anytime, anywhere across Lagos and Abuja with our subscription service.</p>
+                <h1 class="hero-title text-gradient">WashPass <span class="text-white">NG</span></h1>
+                <p class="hero-subtitle">The future of premium car care has arrived. Unlimited, on-demand, and purely mechanical perfection for your vehicle.</p>
                 <div class="hero-actions">
-                    <button class="btn btn-primary btn-large">Start Free Trial</button>
-                    <button class="btn btn-secondary btn-large">
-                        <i class="fas fa-play-circle"></i>
+                    <button class="btn btn-primary btn-lg" onclick="openAuthModal()">
+                        Get Started
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="btn btn-secondary btn-lg">
+                        <i class="fas fa-play"></i>
                         Watch Demo
                     </button>
                 </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number">50K+</span>
-                        <span class="stat-label">Active Users</span>
+                <!-- Live Stats 2026 -->
+                <div class="hero-stats-v2">
+                    <div class="h-stat" data-count="850">
+                        <span class="stat-val">0</span>+
+                        <span class="stat-lab">Vehicles Powered</span>
                     </div>
-                    <div class="stat">
-                        <span class="stat-number">200+</span>
-                        <span class="stat-label">Partner Locations</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">4.8★</span>
-                        <span class="stat-label">User Rating</span>
+                    <div class="h-stat" data-count="15000">
+                        <span class="stat-val">0</span>+
+                        <span class="stat-lab">Hours Saved</span>
                     </div>
                 </div>
             </div>
+            <div class="hero-image-v2">
+                <div class="image-wrapper">
+                    <img src="assets/images/hero_2026.png" alt="WashPass 2026" class="img-main">
+                    <div class="image-glow"></div>
+                </div>
+            </div>
+        </div>
+    </section>
             <div class="hero-visual">
                 <div class="phone-mockup">
                     <div class="phone-screen">
@@ -314,12 +322,10 @@
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Support</h4>
+                    <h4>Portals</h4>
                     <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">FAQ</a></li>
+                        <li><a href="admin-panel.html"><i class="fas fa-lock"></i> Admin Access</a></li>
+                        <li><a href="partner-dashboard.html"><i class="fas fa-store"></i> Partner Portal</a></li>
                     </ul>
                 </div>
             </div>
@@ -343,14 +349,20 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
-            <!-- Step 1: Identity -->
-            <div class="auth-step active" id="step1">
-                <div class="auth-header">
-                    <i class="fas fa-car-side"></i>
-                    <h2>Join WashPass NG</h2>
-                    <p>Start your premium car care journey in Lagos or Abuja.</p>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchAuth('register')">Register</button>
+                    <button class="auth-tab" onclick="switchAuth('login')">Sign In</button>
                 </div>
+
+                <!-- Registration Flow -->
+                <div id="registerFlow">
+                    <div class="auth-step active" id="step1">
+                        <div class="auth-header">
+                            <i class="fas fa-car-side"></i>
+                            <h2>Join WashPass NG</h2>
+                            <p>Start your premium car care journey in Lagos or Abuja.</p>
+                        </div>
                 <div class="auth-form">
                     <div class="form-group">
                         <label for="fullName">Full Name</label>
@@ -411,12 +423,29 @@
                     <h2>Registration Successful!</h2>
                     <p>Welcome to the premium car care family.</p>
                 </div>
-                <div class="auth-summary">
-                    <p>You can now access your dashboard to view nearby partners, buy a single wash, or subscribe to a monthly plan.</p>
                 </div>
-                <button class="btn btn-primary btn-full" onclick="redirectToDashboard()">
-                    Go to Dashboard
-                </button>
+
+                <!-- Login Flow -->
+                <div id="loginFlow" style="display:none;">
+                    <div class="auth-header">
+                        <i class="fas fa-user-circle"></i>
+                        <h2>Welcome Back</h2>
+                        <p>Enter your phone number to access your garage</p>
+                    </div>
+                    <div class="auth-form">
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <div class="phone-input-wrapper">
+                                <span class="country-code">+234</span>
+                                <input type="tel" id="loginPhone" placeholder="812 345 6789" class="form-input phone-input">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-full" onclick="handleLogin()">
+                            Open My Garage
+                            <i class="fas fa-unlock"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WashPass NG - User Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>WashPass NG | Premium Car Care</title>
     <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/dashboard.css">
-    <link rel="stylesheet" href="assets/css/dashboard-extra.css">
+    <link rel="stylesheet" href="assets/css/mobile-app.css">
     <link rel="stylesheet" href="assets/css/car-theme.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,241 +13,211 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Dashboard Navigation -->
-    <nav class="dashboard-nav">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <i class="fas fa-car-side"></i>
-                <span>WashPass NG</span>
-            </div>
-            <div class="nav-menu">
-                <a href="#dashboard" class="nav-link active">Dashboard</a>
-                <a href="#locations" class="nav-link">Locations</a>
-                <a href="#history" class="nav-link">History</a>
-                <a href="#profile" class="nav-link">Profile</a>
-                <button class="btn btn-primary btn-sm" onclick="handleLogout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </button>
-            </div>
-            <div class="user-menu">
-                <div class="user-avatar">
-                    <img src="https://picsum.photos/seed/user1/40/40" alt="User">
+    <div class="app-shell">
+        <!-- Home Section -->
+        <section id="home" class="app-section active">
+            <header class="app-header">
+                <div class="user-info">
+                    <img src="https://picsum.photos/seed/anderson/100/100" alt="Ade" class="user-avatar">
+                    <div class="user-text">
+                        <h2 class="user-name">Ade</h2>
+                        <p><i class="fas fa-map-marker-alt"></i> Lekki Phase 1, Lagos</p>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Dashboard Content -->
-    <main class="dashboard-main">
-        <div class="container">
-            <!-- Welcome Section -->
-            <section class="welcome-section">
-                <div class="welcome-content">
-                    <h1>Welcome back, <span class="user-name">Adebayo</span>! 👋</h1>
-                    <p>Your car is sparkling clean and ready to go</p>
-                </div>
-                <div class="quick-actions">
-                    <button class="btn btn-primary" onclick="showQRScanner()">
-                        <i class="fas fa-qrcode"></i>
-                        Scan to Wash
-                    </button>
-                    <button class="btn btn-outline">
-                        <i class="fas fa-plus"></i>
-                        Add Vehicle
+                <div class="header-actions">
+                    <div class="app-brand" style="display: flex; align-items: center; gap: 8px; margin-right: 15px;">
+                        <i class="fas fa-car-side" style="color: var(--primary); font-size: 20px;"></i>
+                        <span style="font-weight: 800; font-size: 14px; letter-spacing: -0.5px;">WashPass <span style="color: var(--primary);">NG</span></span>
+                    </div>
+                    <button class="icon-btn">
+                        <i class="far fa-bell"></i>
                     </button>
                 </div>
-            </section>
+            </header>
 
-            <!-- Subscription Status Card -->
-            <section class="subscription-section">
-                <div class="subscription-card">
-                    <div class="card-header">
-                        <div class="plan-info">
-                            <h3 id="plan-name">Premium Plan</h3>
-                            <span id="plan-status" class="status-badge active">Active</span>
-                        </div>
-                        <div class="plan-price">
-                            <span class="currency">₦</span>
-                            <span class="amount">25,000</span>
-                            <span class="period">/month</span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="usage-stats">
-                            <div class="stat-item">
-                                <div class="stat-icon">
-                                    <i class="fas fa-car"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <span class="stat-number">12</span>
-                                    <span class="stat-label">Washes Used</span>
-                                </div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-icon">
-                                    <i class="fas fa-infinity"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <span class="stat-number">∞</span>
-                                    <span class="stat-label">Total Available</span>
-                                </div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-icon">
-                                    <i class="fas fa-calendar"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <span class="stat-number">15</span>
-                                    <span class="stat-label">Days Remaining</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 40%"></div>
-                        </div>
-                        <p class="usage-text">40% through your monthly billing cycle</p>
-                    </div>
+            <!-- Promo Banner -->
+            <div class="promo-card" style="background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6)), url('assets/images/midnight_promo.png');">
+                <h3>Up To 20% Off On First Order</h3>
+                <button class="btn">Book Now</button>
+            </div>
+
+            <!-- Categories -->
+            <div class="section-title">
+                <h3>Categories</h3>
+                <a href="#" class="see-all">See All</a>
+            </div>
+            <div class="categories-grid">
+                <div class="category-card" onclick="switchSection('packages')">
+                    <div class="category-icon"><i class="fas fa-car-wash"></i></div>
+                    <span>Car Wash</span>
                 </div>
-            </section>
-
-            <!-- Quick Stats Grid -->
-            <section class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon blue">
-                            <i class="fas fa-car-side"></i>
-                        </div>
-                    </div>
-                    <div class="stat-content">
-                        <h3>Total Washes</h3>
-                        <span class="stat-number" id="totalWashes">0</span>
-                        <p>Lifetime stats</p>
-                    </div>
+                <div class="category-card">
+                    <div class="category-icon"><i class="fas fa-tools"></i></div>
+                    <span>Detailing</span>
                 </div>
-
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon green">
-                            <i class="fas fa-leaf"></i>
-                        </div>
-                    </div>
-                    <div class="stat-content">
-                        <h3>Water Saved</h3>
-                        <span class="stat-number" id="waterSaved">0L</span>
-                        <p>Eco-impact</p>
-                    </div>
+                <div class="category-card">
+                    <div class="category-icon"><i class="fas fa-warehouse"></i></div>
+                    <span>Garage</span>
                 </div>
+            </div>
 
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon orange">
-                            <i class="fas fa-star"></i>
+            <!-- Services -->
+            <div class="section-title">
+                <h3>Services</h3>
+                <a href="#" class="see-all">See All</a>
+            </div>
+            <div class="services-list">
+                <div class="service-card">
+                    <img src="https://picsum.photos/seed/carspa/200/200" alt="Car Spa" class="service-img">
+                    <div class="service-info">
+                        <div class="service-header">
+                            <h4>Premium Exterior Wash</h4>
+                            <span class="text-primary font-bold">₦4,500</span>
                         </div>
-                    </div>
-                    <div class="stat-content">
-                        <h3>Loyalty Points</h3>
-                        <span class="stat-number" id="loyaltyPoints">0</span>
-                        <p>Redeem rewards</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Recent Activity & Locations -->
-            <section class="dashboard-grid">
-                <div class="recent-activity">
-                    <div class="section-header">
-                        <h3>Recent Washes</h3>
-                        <a href="#" class="view-all">View All</a>
-                    </div>
-                    <div class="activity-list" id="activityList">
-                        <!-- Dynamic History -->
-                        <div class="empty-state">
-                            <i class="fas fa-clock"></i>
-                            <p>No wash history yet. Your first shine is waiting!</p>
+                        <div class="service-meta">
+                            <span><i class="far fa-clock"></i> 40 min</span>
+                            <span><i class="far fa-star"></i> 50 XP</span>
+                        </div>
+                        <div class="service-footer">
+                            <button class="book-btn">Book Now</button>
                         </div>
                     </div>
                 </div>
+                <!-- More services can be added dynamically -->
+            </div>
+        </section>
 
-                <div class="nearby-locations">
-                    <div class="section-header">
-                        <h3>Nearby Locations</h3>
-                        <a href="#" class="view-map">View Map</a>
+        <!-- Packages Section (Product List) -->
+        <section id="packages" class="app-section">
+            <header class="app-header">
+                <button class="icon-btn" onclick="switchSection('home')">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3>Car Wash</h3>
+                <button class="icon-btn" onclick="switchSection('cart')">
+                    <i class="fas fa-shopping-cart"></i>
+                </button>
+            </header>
+            
+            <div class="packages-list">
+                <!-- Silver Package -->
+                <div class="product-card">
+                    <div class="product-header">
+                        <h4>The Silver Package</h4>
+                        <p>Advanced exterior wash & interior vacuum</p>
                     </div>
-                    <div class="location-search">
-                        <div class="form-group">
-                            <input type="text" id="locationInput" placeholder="Enter your area (e.g. Lekki)" class="form-input">
-                            <button class="btn btn-primary btn-sm" onclick="searchNearby()">Find Nearest</button>
-                        </div>
+                    <img src="assets/images/silver_car.png" alt="Silver Package" class="product-img">
+                    <div class="product-specs">
+                        <div class="spec"><span>Duration</span><p>45 Mins</p></div>
+                        <div class="spec"><span>Price</span><p>₦12,500</p></div>
                     </div>
-                    <div class="locations-list" id="locationsList">
-                        <div class="empty-state">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <p>Enter your location to find nearby WashPass partners.</p>
-                        </div>
-                    </div>
+                    <button class="next-btn" onclick="addToCart('Silver Package', 12500)">Next</button>
                 </div>
-            </section>
 
-            <!-- My Vehicles Section -->
-            <section class="vehicles-section">
-                <div class="section-header">
-                    <h3>My Vehicles</h3>
-                    <button class="btn btn-sm btn-outline">
-                        <i class="fas fa-plus"></i>
-                        Add Vehicle
-                    </button>
-                </div>
-                <div class="vehicles-grid" id="vehiclesGrid">
-                    <!-- Dynamic Vehicles will be injected here -->
-                    <div class="empty-state-wide">
-                        <div class="empty-car-icon">
-                            <i class="fas fa-car-side"></i>
-                        </div>
-                        <h4>Your Garage is Empty</h4>
-                        <p>Add your primary vehicle to start enjoying specialized car care.</p>
-                        <button class="btn btn-primary" onclick="showAddVehicleModal()">
-                            <i class="fas fa-plus"></i>
-                            Register Vehicle
-                        </button>
+                <!-- Golden Package -->
+                <div class="product-card">
+                    <div class="product-header">
+                        <h4>The Golden Package</h4>
+                        <p>Full detailing with premium wax & engine shine</p>
                     </div>
+                    <img src="assets/images/golden_car.png" alt="Golden Package" class="product-img">
+                    <div class="product-specs">
+                        <div class="spec"><span>Duration</span><p>2 Hours</p></div>
+                        <div class="spec"><span>Price</span><p>₦25,000</p></div>
+                    </div>
+                    <button class="next-btn" onclick="addToCart('Golden Package', 25000)">Next</button>
                 </div>
-            </section>
-        </div>
-    </main>
+            </div>
+        </section>
 
-    <!-- Add Vehicle Modal -->
-    <div id="vehicleModal" class="modal">
-        <div class="modal-content auth-modal">
-            <div class="modal-header">
-                <h2>Add Vehicle</h2>
-                <button class="modal-close" onclick="closeAddVehicleModal()">
-                    <i class="fas fa-times"></i>
+        <!-- Cart Section -->
+        <section id="cart" class="app-section">
+            <header class="app-header">
+                <button class="icon-btn" onclick="switchSection('home')">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3>My Cart</h3>
+                <button class="icon-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                </button>
+            </header>
+
+            <div id="cart-items" class="cart-items">
+                <!-- Injected via JS -->
+            </div>
+
+            <div class="charges-card">
+                <h4>Charges</h4>
+                <div class="charge-row"><span>Professional Detailing</span><span>₦22,500</span></div>
+                <div class="charge-row"><span>Under-Body Wash</span><span>₦2,500</span></div>
+                <div class="charge-row font-bold total"><span>Total Price</span><span id="cart-total">₦25,000</span></div>
+            </div>
+
+            <button class="pay-btn">Pay Now</button>
+        </section>
+
+        <!-- Profile/Garage Section -->
+        <section id="profile" class="app-section">
+            <header class="app-header">
+                <button class="icon-btn" onclick="switchSection('home')">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3>My Garage</h3>
+                <button class="icon-btn" onclick="showAddVehicleModal()">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </header>
+
+            <div class="garage-stats" style="display: flex; gap: 12px; margin-bottom: 24px;">
+                <div class="stat-card" style="flex: 1; padding: 16px; background: var(--white); border-radius: var(--radius-lg); text-align: center;">
+                    <span style="font-size: 11px; color: var(--text-muted);">Points</span>
+                    <p style="font-size: 18px; font-weight: 800; margin: 4px 0;">2,450</p>
+                </div>
+                <div class="stat-card" style="flex: 1; padding: 16px; background: var(--white); border-radius: var(--radius-lg); text-align: center;">
+                    <span style="font-size: 11px; color: var(--text-muted);">Washes</span>
+                    <p style="font-size: 18px; font-weight: 800; margin: 4px 0;">12</p>
+                </div>
+            </div>
+
+            <div id="vehiclesGrid" class="vehicles-grid">
+                <!-- Injected via existing dashboard.js logic -->
+                 <div class="empty-state" style="text-align: center; padding: 40px 20px;">
+                    <i class="fas fa-car" style="font-size: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
+                    <p style="color: var(--text-muted);">No vehicles in your garage</p>
+                    <button class="btn" onclick="showAddVehicleModal()" style="margin-top: 16px;">Add Your First Car</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="javascript:void(0)" class="nav-item active" onclick="switchSection('home')">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="javascript:void(0)" class="nav-item" onclick="switchSection('cart')">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+            </a>
+            <div class="nav-item nav-item-scan">
+                <button class="scan-btn" onclick="showQRScanner()">
+                    <i class="fas fa-qrcode"></i>
                 </button>
             </div>
-            <form id="addVehicleForm" onsubmit="handleAddVehicle(event)">
-                <div class="form-group">
-                    <label>Vehicle Make & Model</label>
-                    <input type="text" id="vehicleModel" placeholder="e.g. Toyota Camry" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label>License Plate</label>
-                    <input type="text" id="vehiclePlate" placeholder="ABC-123-GH" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label>Color</label>
-                    <input type="text" id="vehicleColor" placeholder="Silver" class="form-input" required>
-                </div>
-                <button type="submit" class="btn btn-primary btn-full">
-                    Save to Garage
-                </button>
-            </form>
-        </div>
+            <a href="javascript:void(0)" class="nav-item">
+                <i class="fas fa-th-large"></i>
+                <span>Categories</span>
+            </a>
+            <a href="javascript:void(0)" class="nav-item" onclick="switchSection('profile')">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
     </div>
 
-    <!-- QR Scanner Modal -->
+    <!-- QR Scanner Modal (Existing Feature) -->
     <div id="qrModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content auth-modal">
             <div class="modal-header">
                 <h3>Scan QR Code to Wash</h3>
                 <button class="modal-close" onclick="closeQRScanner()">
@@ -264,17 +233,37 @@
                             <p>Position QR code within frame</p>
                         </div>
                     </div>
-                    <div class="scanner-info">
-                        <p>Show this code at any WashPass partner location</p>
-                        <div class="user-qr-code">
-                            <div class="qr-code-display">
-                                <img src="https://picsum.photos/seed/qrcode/200/200" alt="QR Code">
-                            </div>
-                            <p class="user-code">WP-2024-ABCD-1234</p>
-                        </div>
-                    </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Add Vehicle Modal (Existing Feature) -->
+    <div id="vehicleModal" class="modal">
+        <div class="modal-content auth-modal">
+            <div class="modal-header">
+                <h2>Add Vehicle</h2>
+                <button class="modal-close" onclick="closeAddVehicleModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addVehicleForm" onsubmit="handleAddVehicle(event)" style="padding: 20px;">
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 13px; margin-bottom: 6px;">Vehicle Make & Model</label>
+                    <input type="text" id="vehicleModel" placeholder="e.g. Toyota Camry" class="form-input" required style="width: 100%; padding: 12px; border: 1px solid var(--bg-app); border-radius: 8px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 13px; margin-bottom: 6px;">License Plate</label>
+                    <input type="text" id="vehiclePlate" placeholder="ABC-123-GH" class="form-input" required style="width: 100%; padding: 12px; border: 1px solid var(--bg-app); border-radius: 8px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label style="display: block; font-size: 13px; margin-bottom: 6px;">Color</label>
+                    <input type="text" id="vehicleColor" placeholder="Silver" class="form-input" required style="width: 100%; padding: 12px; border: 1px solid var(--bg-app); border-radius: 8px;">
+                </div>
+                <button type="submit" class="btn" style="width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700;">
+                    Save to Garage
+                </button>
+            </form>
         </div>
     </div>
 
@@ -287,8 +276,9 @@
         <div class="loading-text">Revving up...</div>
     </div>
 
+    <!-- Scripts -->
     <script src="assets/js/auth.js"></script>
-    <script src="assets/js/script.js"></script>
+    <script src="assets/js/app-router.js"></script>
     <script src="assets/js/dashboard.js"></script>
 </body>
 </html>
