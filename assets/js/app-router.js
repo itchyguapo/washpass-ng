@@ -150,30 +150,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Native SPA Login Flow
-function handleSPALogin() {
-    const phoneInput = document.getElementById('welcomePhone');
-    if (!phoneInput || !phoneInput.value) {
-        alert("Please enter a valid phone number.");
-        return;
-    }
+// Native SPA Auth Modal Logic
+window.openAuthModal = function() {
+    const modal = document.getElementById('authModal');
+    if (modal) modal.classList.add('active');
+};
 
-    const btn = event.target;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-    btn.disabled = true;
-
-    // Simulate login network delay
-    setTimeout(() => {
-        Auth.login('Ade', phoneInput.value); // Use local identity for demo
-        
-        // Update header Data
-        document.querySelectorAll('.user-name').forEach(el => el.textContent = 'Ade');
-        
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-        
-        // Slide instantly into the dashboard
-        switchSection('home');
-    }, 1500);
-}
+window.closeAuthModal = function() {
+    const modal = document.getElementById('authModal');
+    if (modal) modal.classList.remove('active');
+};

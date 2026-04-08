@@ -123,11 +123,7 @@ const Auth = {
             // User signed in successfully.
             const user = result.user;
             console.log("Logged in as:", user.phoneNumber);
-            
-            // UI will automatically switch to dashboard via onAuthStateChanged
-            // but we can force it here for immediate UX
-            if (typeof switchSection === 'function') switchSection('home');
-            
+            // The UI routing is now handled safely by syncUserData after fetching checking if name exists.
             btn.innerHTML = originalText;
             btn.disabled = false;
         }).catch((error) => {
@@ -141,8 +137,26 @@ const Auth = {
     restartLogin() {
         document.getElementById('phone-input-step').style.display = 'block';
         document.getElementById('otp-input-step').style.display = 'none';
+        document.getElementById('name-input-step').style.display = 'none';
         document.getElementById('welcomePhone').value = '';
         document.getElementById('otpCode').value = '';
+    },
+
+    // Save Name Action (Final Step for new users)
+    saveProfileName() {
+        if (!this.currentUser) return;
+        const name = document.getElementById('profileName').value.trim();
+        if (!name) return alert('Please enter your name');
+
+        const btn = event.target;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        
+        db.collection('customers').doc(this.currentUser.uid).update({ name: name }).then(() => {
+            this.currentUser.displayName = name;
+            document.querySelectorAll('.user-name').forEach(el => el.textContent = name);
+            if (typeof closeAuthModal === 'function') closeAuthModal();
+            if (typeof switchSection === 'function') switchSection('home');
+        });
     },
 
     // Logout
@@ -166,12 +180,23 @@ const Auth = {
                     joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     status: 'active'
                 });
+                // Slide to Name capture
+                document.getElementById('phone-input-step').style.display = 'none';
+                document.getElementById('otp-input-step').style.display = 'none';
+                document.getElementById('name-input-step').style.display = 'block';
             } else {
-                // User exists, update UI with their specific name if they have one
                 const data = doc.data();
-                if (data.name) {
+                if (!data.name) {
+                    // Profile exists but no name yet
+                    document.getElementById('phone-input-step').style.display = 'none';
+                    document.getElementById('otp-input-step').style.display = 'none';
+                    document.getElementById('name-input-step').style.display = 'block';
+                } else {
+                    // Fully onboarded user -> let them in!
                     this.currentUser.displayName = data.name;
                     document.querySelectorAll('.user-name').forEach(el => el.textContent = data.name);
+                    if (typeof closeAuthModal === 'function') closeAuthModal();
+                    if (typeof switchSection === 'function') switchSection('home');
                 }
             }
         });

@@ -68,15 +68,12 @@ function renderVehicles(vehicles) {
     
     if (vehicles.length === 0) {
         grid.innerHTML = `
-            <div class="empty-state-wide">
-                <div class="empty-car-icon">
-                    <i class="fas fa-car-side"></i>
-                </div>
-                <h4>Your Garage is Empty</h4>
-                <p>Register your car to start enjoying specialized car care.</p>
-                <button class="btn btn-primary" onclick="showAddVehicleModal()">
-                    <i class="fas fa-plus"></i>
-                    Register Vehicle
+            <div class="empty-state-vector">
+                <i class="fas fa-warehouse empty-vector-icon"></i>
+                <h4 style="font-weight: 800; font-size: 20px; margin-bottom: 8px;">Your Garage is Empty</h4>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Add a vehicle to unlock personalized bookings.</p>
+                <button class="btn-pill" onclick="showAddVehicleModal()">
+                    <i class="fas fa-plus"></i> Add Vehicle
                 </button>
             </div>
         `;
