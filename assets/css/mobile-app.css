@@ -598,6 +598,32 @@
     to { opacity: 1; }
 }
 
+/* === Auth Modal: Centered Dialog (keyboard-safe) === */
+#authModal {
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+#authModal .modal-content {
+    background: #0d0d0d;
+    width: 100%;
+    max-width: 440px;
+    border-radius: 28px;
+    padding: 28px 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    animation: scaleInModal 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+@keyframes scaleInModal {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to   { opacity: 1; transform: scale(1)   translateY(0); }
+}
+
+/* Bottom sheets for QR + Vehicles (unchanged) */
 .modal-content.bottom-sheet {
     background: var(--card-bg);
     width: 100%;
@@ -628,15 +654,57 @@
 }
 
 .modal-close {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    width: 32px;
-    height: 32px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    color: var(--white);
+    color: var(--text-muted);
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.modal-close:active {
+    background: rgba(255,255,255,0.12);
+    transform: scale(0.9);
+}
+
+/* Auth modal specific close button - top right corner */
+#authModal .close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+}
+
+#authModal .close-btn:active {
+    background: rgba(255,0,0,0.15);
+    color: #ff6b6b;
+    transform: scale(0.9);
+}
+
+/* Hide old drag handle for auth modal (not needed in center modal) */
+#authModal .drag-handle { display: none; }
+
+#authModal .modal-header {
+    position: relative;
+    margin-bottom: 20px;
+    padding-right: 44px; /* room for absolute close btn */
 }
 
 /* Welcome Login Screen */

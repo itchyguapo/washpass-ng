@@ -163,10 +163,11 @@ const Auth = {
             return;
         }
 
-        const btn = event.target;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        btn.disabled = true;
+        const btn = document.querySelector('#pin-entry-step .pay-btn');
+        const originalText = btn ? btn.innerHTML : '';
+        if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true; }
+
+        console.log('[WashPass] Verifying PIN for phone:', this._pendingPhone);
 
         try {
             const enteredHash = await sha256(pin);
@@ -209,13 +210,11 @@ const Auth = {
                 await this.loadProfileAndEnter(uid);
             }
 
-            btn.innerHTML = originalText;
-            btn.disabled = false;
+            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
 
         } catch (err) {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-            console.error('PIN verify error:', err);
+            if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+            console.error('[WashPass] PIN verify error:', err);
             alert('Error verifying PIN. Please try OTP instead.');
         }
     },
@@ -253,10 +252,9 @@ const Auth = {
             return;
         }
 
-        const btn = event.target;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Securing...';
-        btn.disabled = true;
+        const btn = document.querySelector('#pin-setup-step .pay-btn');
+        const originalText = btn ? btn.innerHTML : '';
+        if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Securing...'; btn.disabled = true; }
 
         try {
             const pinHash = await sha256(pin);
