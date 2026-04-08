@@ -27,21 +27,24 @@
         <!-- Home Section -->
         <section id="home" class="app-section active">
             <header class="app-header">
-                <div class="user-info">
-                    <img src="https://picsum.photos/seed/anderson/100/100" alt="Ade" class="user-avatar">
-                    <div class="user-text">
-                        <h2 class="user-name">Ade</h2>
-                        <div class="location-pill" onclick="Auth.requestLocation()" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 230, 118, 0.1); padding: 4px 10px; border-radius: 20px; color: var(--primary); font-size: 12px; font-weight: 600; margin-top: 4px;">
-                            <i class="fas fa-map-marker-alt"></i> <span id="userLocationText">Location off</span>
+                <!-- LEFT: Brand -->
+                <div class="app-brand" style="display: flex; align-items: center; gap: 8px;">
+                    <div style="height: 36px; width: 36px; border-radius: 12px; background: rgba(0,230,118,0.1); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-car-side" style="color: var(--primary); font-size: 18px;"></i>
+                    </div>
+                    <span style="font-weight: 800; font-size: 15px; letter-spacing: -0.5px;">WashPass <span style="color: var(--primary);">NG</span></span>
+                </div>
+
+                <!-- RIGHT: User Info + Bell -->
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="text-align: right;">
+                        <h2 class="user-name" style="font-size: 14px; font-weight: 700; margin: 0; line-height: 1.2;">Welcome</h2>
+                        <div class="location-pill" onclick="Auth.requestLocation()" style="cursor: pointer; display: inline-flex; align-items: center; gap: 5px; background: rgba(0, 230, 118, 0.08); padding: 3px 8px; border-radius: 20px; color: var(--primary); font-size: 11px; font-weight: 600; margin-top: 3px;">
+                            <i class="fas fa-map-marker-alt" style="font-size: 10px;"></i>
+                            <span id="userLocationText">Set location</span>
                         </div>
                     </div>
-                </div>
-                <div class="header-actions">
-                    <div class="app-brand" style="display: flex; align-items: center; gap: 8px; margin-right: 15px;">
-                        <i class="fas fa-car-side" style="color: var(--primary); font-size: 20px;"></i>
-                        <span style="font-weight: 800; font-size: 14px; letter-spacing: -0.5px;">WashPass <span style="color: var(--primary);">NG</span></span>
-                    </div>
-                    <button class="icon-btn">
+                    <button class="icon-btn" style="position: relative;">
                         <i class="far fa-bell"></i>
                     </button>
                 </div>

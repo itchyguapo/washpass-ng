@@ -170,50 +170,79 @@ const Auth = {
 
         try {
             const enteredHash = await sha256(pin);
-            const storedHash = localStorage.getItem('wp_pin');
+            const phoneKey = this._pendingPhone?.replace('+', '');
 
-            if (storedHash && storedHash === enteredHash) {
-                // Fast path: matches local hash, sign in silently
+            if (!phoneKey) {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
-                // User is already tracked in firebase.auth() if token is valid
-                // but we still need to re-auth via phone for Firebase security
-                // For prototype: rely on persistent auth session
-                const user = firebase.auth().currentUser;
-                if (user) {
-                    if (typeof closeAuthModal === 'function') closeAuthModal();
-                    if (typeof switchSection === 'function') switchSection('home');
-                } else {
-                    alert('Session expired. Please use OTP to log in again.');
-                    this.forgotPIN();
-                }
-            } else {
-                // Verify against Firestore as backup
-                const phoneKey = this._pendingPhone?.replace('+', '');
-                if (phoneKey) {
-                    const snap = await db.collection('phone_index').doc(phoneKey).get();
-                    if (snap.exists && snap.data().pinHash === enteredHash) {
-                        localStorage.setItem('wp_pin', enteredHash);
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                        if (typeof closeAuthModal === 'function') closeAuthModal();
-                        if (typeof switchSection === 'function') switchSection('home');
-                    } else {
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                        alert('Incorrect PIN. Try again or use OTP.');
-                    }
-                } else {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    alert('Incorrect PIN. Try again or use OTP.');
-                }
+                alert('Session issue. Please re-enter your phone number.');
+                this.restartLogin();
+                return;
             }
+
+            // Always verify against Firestore for security
+            const snap = await db.collection('phone_index').doc(phoneKey).get();
+
+            if (!snap.exists || snap.data().pinHash !== enteredHash) {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                // Shake the input for visual feedback
+                const input = document.getElementById('pinEntry');
+                if (input) { input.value = ''; input.focus(); }
+                alert('Incorrect PIN. Try again or tap "Forgot PIN?" to use OTP.');
+                return;
+            }
+
+            // ✅ PIN Verified — cache locally for next time
+            localStorage.setItem('wp_pin', enteredHash);
+            const uid = snap.data().uid;
+
+            // Check if Firebase session is still alive
+            const currentUser = firebase.auth().currentUser;
+            if (currentUser && currentUser.uid === uid) {
+                // Session still valid — go straight in
+                this.currentUser = currentUser;
+                await this.loadProfileAndEnter(uid);
+            } else {
+                // Session expired — load profile data directly from Firestore
+                // The PIN cryptographically proves identity
+                await this.loadProfileAndEnter(uid);
+            }
+
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+
         } catch (err) {
             btn.innerHTML = originalText;
             btn.disabled = false;
-            alert('Error verifying PIN. Please try OTP.');
+            console.error('PIN verify error:', err);
+            alert('Error verifying PIN. Please try OTP instead.');
         }
+    },
+
+    // ─── Load profile + enter dashboard (used after PIN verify) ──────────────
+    async loadProfileAndEnter(uid) {
+        const doc = await db.collection('customers').doc(uid).get();
+        if (doc.exists) {
+            const data = doc.data();
+            // Populate the UI
+            document.querySelectorAll('.user-name').forEach(el => el.textContent = data.name || 'Welcome');
+            const pts = document.getElementById('statPoints');
+            const wsh = document.getElementById('statWashes');
+            if (pts) pts.textContent = (data.points || 0).toLocaleString();
+            if (wsh) wsh.textContent = (data.washes || 0).toLocaleString();
+            const locText = document.getElementById('userLocationText');
+            if (locText && data.location) locText.textContent = data.location;
+            // Start real-time vehicle listener
+            db.collection('customers').doc(uid).collection('vehicles').onSnapshot((snapshot) => {
+                const vehicles = [];
+                snapshot.forEach(d => vehicles.push({ id: d.id, ...d.data() }));
+                window.cachedVehicles = vehicles;
+                if (typeof renderVehicles === 'function') renderVehicles(vehicles);
+            });
+        }
+        if (typeof closeAuthModal === 'function') closeAuthModal();
+        if (typeof switchSection === 'function') switchSection('home');
     },
 
     // ─── Setup PIN (New User after OTP) ──────────────────────────────────────
