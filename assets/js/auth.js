@@ -1,5 +1,7 @@
 /**
- * Live Firebase Authentication & Firestore Integration for WashPass NG
+ * WashPass NG - Firebase Auth with Two-Track PIN System
+ * New Users: Phone → OTP → Set PIN → Name → Dashboard
+ * Returning Users: Phone → PIN → Dashboard (no SMS)
  */
 
 const firebaseConfig = {
@@ -12,17 +14,34 @@ const firebaseConfig = {
     measurementId: "G-YLCTPTS624"
 };
 
-// Initialize Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 const db = firebase.firestore();
 
+// --- Helper: SHA-256 hash using Web Crypto API ---
+async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Helper: show a specific step, hide the rest
+function showStep(id) {
+    const steps = ['phone-input-step', 'pin-entry-step', 'otp-input-step', 'pin-setup-step', 'name-input-step'];
+    steps.forEach(s => {
+        const el = document.getElementById(s);
+        if (el) el.style.display = (s === id) ? 'block' : 'none';
+    });
+}
+
 const Auth = {
     currentUser: null,
     confirmationResult: null,
+    _pendingPhone: null, // stores formatted phone during login flow
 
-    // Auto-init listener
+    // ─── Auto-init: listens for auth state ───────────────────────────────────
     init() {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
@@ -30,83 +49,88 @@ const Auth = {
                 this.syncUserData(user.uid, user.phoneNumber);
             } else {
                 this.currentUser = null;
-                // Only redirect to welcome if not already there
-                if (window.location.hash !== '#welcome') {
-                    if (typeof switchSection === 'function') switchSection('welcome');
-                }
+                if (typeof switchSection === 'function') switchSection('welcome');
             }
         });
 
-        // Setup Recaptcha once DOM is loaded
+        // Invisible reCAPTCHA
         window.addEventListener('load', () => {
             try {
                 window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
                     'size': 'invisible',
-                    'callback': (response) => {
-                        // reCAPTCHA solved
-                    }
+                    'callback': () => {}
                 });
             } catch(e) {
-                console.log("Recaptcha Init Error", e);
+                console.log("Recaptcha Init Error:", e);
             }
         });
     },
 
-    // Get current user mapped for the legacy UI
-    getUser() {
-        if (!this.currentUser) return null;
-        
-        // Return a mapped version of the data for the UI
-        return {
-            isLoggedIn: true,
-            uid: this.currentUser.uid,
-            phone: this.currentUser.phoneNumber,
-            name: this.currentUser.displayName || 'WashPass User', // Will be fetched from firestore
-            vehicles: window.cachedVehicles || [] 
-        };
-    },
-
-    // Step 1: Send OTP via SMS
-    sendOTP() {
-        let phone = document.getElementById('welcomePhone').value;
+    // ─── STEP 1: Smart Router (OTP vs PIN) ───────────────────────────────────
+    async smartRoute() {
+        let phone = document.getElementById('welcomePhone').value.trim();
         if (!phone || phone.length < 10) {
-            alert('Please enter a valid phone number (e.g. 8012345678)');
+            alert('Please enter a valid 10-digit phone number');
             return;
         }
 
-        // Format to Nigerian standard +234
         if (phone.startsWith('0')) phone = phone.substring(1);
         const formattedPhone = `+234${phone}`;
+        this._pendingPhone = formattedPhone;
 
-        // UI Loading State
         const btn = event.target;
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
         btn.disabled = true;
 
-        const appVerifier = window.recaptchaVerifier;
+        try {
+            // Check if user already has a Firestore doc with a PIN set
+            const phoneKey = formattedPhone.replace('+', '');
+            const snap = await db.collection('phone_index').doc(phoneKey).get();
 
-        firebase.auth().signInWithPhoneNumber(formattedPhone, appVerifier)
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+
+            if (snap.exists && snap.data().hasPin) {
+                // ── Returning user → show PIN entry, skip SMS ──
+                showStep('pin-entry-step');
+                setTimeout(() => document.getElementById('pinEntry')?.focus(), 200);
+            } else {
+                // ── New user or no PIN → send OTP ──
+                this.sendOTP(formattedPhone);
+            }
+        } catch (err) {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            // Firestore error: fall back to OTP
+            this.sendOTP(formattedPhone);
+        }
+    },
+
+    // ─── Send OTP via SMS ─────────────────────────────────────────────────────
+    sendOTP(formattedPhone) {
+        const phone = formattedPhone || this._pendingPhone;
+        if (!phone) return;
+
+        const btn = document.querySelector('#phone-input-step .pay-btn') ||
+                    document.querySelector('#otp-input-step');
+
+        showStep('otp-input-step');
+
+        firebase.auth().signInWithPhoneNumber(phone, window.recaptchaVerifier)
             .then((confirmationResult) => {
-                // SMS sent.
                 this.confirmationResult = confirmationResult;
-                
-                // Toggle UI to OTP Input
-                document.getElementById('phone-input-step').style.display = 'none';
-                document.getElementById('otp-input-step').style.display = 'block';
-                
-                btn.innerHTML = originalText;
-                btn.disabled = false;
+                setTimeout(() => document.getElementById('otpCode')?.focus(), 200);
             }).catch((error) => {
                 alert('Error sending SMS: ' + error.message);
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                // Reset recaptcha
-                if (window.recaptchaVerifier) window.recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
+                showStep('phone-input-step');
+                if (window.recaptchaVerifier) {
+                    window.recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
+                }
             });
     },
 
-    // Step 2: Verify OTP
+    // ─── Verify OTP ──────────────────────────────────────────────────────────
     verifyOTP() {
         const code = document.getElementById('otpCode').value;
         if (!code || code.length < 6) {
@@ -120,29 +144,133 @@ const Auth = {
         btn.disabled = true;
 
         this.confirmationResult.confirm(code).then((result) => {
-            // User signed in successfully.
-            const user = result.user;
-            console.log("Logged in as:", user.phoneNumber);
-            // The UI routing is now handled safely by syncUserData after fetching checking if name exists.
+            this.currentUser = result.user;
             btn.innerHTML = originalText;
             btn.disabled = false;
+            // syncUserData will handle routing to PIN setup or name → handled in syncUserData
         }).catch((error) => {
-            alert('Invalid verification code: ' + error.message);
+            alert('Invalid code: ' + error.message);
             btn.innerHTML = originalText;
             btn.disabled = false;
         });
     },
 
-    // Cancel Login Action
-    restartLogin() {
-        document.getElementById('phone-input-step').style.display = 'block';
-        document.getElementById('otp-input-step').style.display = 'none';
-        document.getElementById('name-input-step').style.display = 'none';
-        document.getElementById('welcomePhone').value = '';
-        document.getElementById('otpCode').value = '';
+    // ─── Verify PIN (Returning User) ─────────────────────────────────────────
+    async verifyPIN() {
+        const pin = document.getElementById('pinEntry').value;
+        if (!pin || pin.length < 4) {
+            alert('Please enter your 4-digit PIN');
+            return;
+        }
+
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        btn.disabled = true;
+
+        try {
+            const enteredHash = await sha256(pin);
+            const storedHash = localStorage.getItem('wp_pin');
+
+            if (storedHash && storedHash === enteredHash) {
+                // Fast path: matches local hash, sign in silently
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                // User is already tracked in firebase.auth() if token is valid
+                // but we still need to re-auth via phone for Firebase security
+                // For prototype: rely on persistent auth session
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    if (typeof closeAuthModal === 'function') closeAuthModal();
+                    if (typeof switchSection === 'function') switchSection('home');
+                } else {
+                    alert('Session expired. Please use OTP to log in again.');
+                    this.forgotPIN();
+                }
+            } else {
+                // Verify against Firestore as backup
+                const phoneKey = this._pendingPhone?.replace('+', '');
+                if (phoneKey) {
+                    const snap = await db.collection('phone_index').doc(phoneKey).get();
+                    if (snap.exists && snap.data().pinHash === enteredHash) {
+                        localStorage.setItem('wp_pin', enteredHash);
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        if (typeof closeAuthModal === 'function') closeAuthModal();
+                        if (typeof switchSection === 'function') switchSection('home');
+                    } else {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        alert('Incorrect PIN. Try again or use OTP.');
+                    }
+                } else {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert('Incorrect PIN. Try again or use OTP.');
+                }
+            }
+        } catch (err) {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            alert('Error verifying PIN. Please try OTP.');
+        }
     },
 
-    // Save Name Action (Final Step for new users)
+    // ─── Setup PIN (New User after OTP) ──────────────────────────────────────
+    async setupPIN() {
+        const pin = document.getElementById('pinSetup').value;
+        if (!pin || pin.length < 4) {
+            alert('Please enter a 4-digit PIN');
+            return;
+        }
+
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Securing...';
+        btn.disabled = true;
+
+        try {
+            const pinHash = await sha256(pin);
+            // Store hash locally for fast offline verify
+            localStorage.setItem('wp_pin', pinHash);
+
+            // Store hash in Firestore phone index
+            if (this.currentUser && this._pendingPhone) {
+                const phoneKey = this._pendingPhone.replace('+', '');
+                await db.collection('phone_index').doc(phoneKey).set({
+                    uid: this.currentUser.uid,
+                    pinHash: pinHash,
+                    hasPin: true
+                });
+            }
+
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+
+            // Move to Name setup
+            showStep('name-input-step');
+            setTimeout(() => document.getElementById('profileName')?.focus(), 200);
+        } catch (err) {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            alert('Error setting PIN. Please try again.');
+        }
+    },
+
+    skipPIN() {
+        showStep('name-input-step');
+        setTimeout(() => document.getElementById('profileName')?.focus(), 200);
+    },
+
+    forgotPIN() {
+        // Fall back to OTP flow
+        showStep('phone-input-step');
+        if (this._pendingPhone) {
+            this.sendOTP(this._pendingPhone);
+        }
+    },
+
+    // ─── Save Profile Name ────────────────────────────────────────────────────
     saveProfileName() {
         if (!this.currentUser) return;
         const name = document.getElementById('profileName').value.trim();
@@ -150,8 +278,8 @@ const Auth = {
 
         const btn = event.target;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-        
-        db.collection('customers').doc(this.currentUser.uid).update({ name: name }).then(() => {
+
+        db.collection('customers').doc(this.currentUser.uid).update({ name }).then(() => {
             this.currentUser.displayName = name;
             document.querySelectorAll('.user-name').forEach(el => el.textContent = name);
             if (typeof closeAuthModal === 'function') closeAuthModal();
@@ -159,61 +287,67 @@ const Auth = {
         });
     },
 
-    // Logout
+    restartLogin() {
+        showStep('phone-input-step');
+        ['welcomePhone', 'otpCode', 'pinEntry', 'pinSetup', 'profileName'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        this._pendingPhone = null;
+    },
+
+    // ─── Logout ───────────────────────────────────────────────────────────────
     logout() {
         firebase.auth().signOut().then(() => {
-            if (typeof switchSection === 'function') switchSection('welcome');
+            localStorage.removeItem('wp_pin');
             window.cachedVehicles = [];
-            // Remove the hard redirect to index.html
+            if (typeof switchSection === 'function') switchSection('welcome');
         });
     },
 
-    // Coming Soon Alert Pop Up
+    // ─── Coming Soon Alert ────────────────────────────────────────────────────
     comingSoon(feature) {
-        alert("🚧 " + feature + " is coming soon! Our engineers are working hard.");
+        alert('🚧 ' + feature + ' is coming soon! Our engineers are working hard.');
     },
 
-    // Native GPS Location Request
+    // ─── Native GPS ───────────────────────────────────────────────────────────
     requestLocation() {
         const textEl = document.getElementById('userLocationText');
         const locPill = document.getElementById('locationsPill');
         if (!navigator.geolocation) {
-            if (textEl) textEl.textContent = "GPS Not Supported";
+            if (textEl) textEl.textContent = 'GPS Not Supported';
             return;
         }
-        
-        if (textEl) textEl.textContent = "Locating...";
-        if (locPill) locPill.textContent = "Locating...";
-        
+
+        if (textEl) textEl.textContent = 'Locating...';
+        if (locPill) locPill.textContent = 'Locating...';
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                // Real app would reverse geocode here.
-                const locationStr = '\uD83D\uDCCD Lekki Phase 1, Lagos';
+                const locationStr = '📍 Lekki Phase 1, Lagos';
                 if (textEl) textEl.textContent = locationStr;
                 if (locPill) locPill.textContent = locationStr;
-                // Persist location to Firestore
                 if (this.currentUser) {
-                    db.collection('customers').doc(this.currentUser.uid).update({ location: locationStr }).catch(() => {});
+                    db.collection('customers').doc(this.currentUser.uid)
+                      .update({ location: locationStr }).catch(() => {});
                 }
-                if (typeof showNotification === 'function') showNotification("Location synced!", "success");
+                if (typeof showNotification === 'function') showNotification('Location synced!', 'success');
             },
             (error) => {
-                let msg = "Location Off";
-                if (error.code === error.PERMISSION_DENIED) msg = "Permission Denied";
+                const msg = error.code === error.PERMISSION_DENIED ? 'Permission Denied' : 'Location Off';
                 if (textEl) textEl.textContent = msg;
                 if (locPill) locPill.textContent = msg;
-                if (typeof showNotification === 'function') showNotification("Location access denied.", "error");
+                if (typeof showNotification === 'function') showNotification('Location access denied.', 'error');
             }
         );
     },
 
-    // Sync Data with Firestore
+    // ─── Sync Firestore → UI ─────────────────────────────────────────────────
     syncUserData(uid, phone) {
         const userRef = db.collection('customers').doc(uid);
-        
+
         userRef.get().then((doc) => {
             if (!doc.exists) {
-                // Create new customer profile
                 userRef.set({
                     phone: phone,
                     points: 0,
@@ -221,29 +355,27 @@ const Auth = {
                     joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     status: 'active'
                 });
-                // Slide to Name capture
-                document.getElementById('phone-input-step').style.display = 'none';
-                document.getElementById('otp-input-step').style.display = 'none';
-                document.getElementById('name-input-step').style.display = 'block';
+                // New user — go to PIN setup after OTP
+                showStep('pin-setup-step');
+                setTimeout(() => document.getElementById('pinSetup')?.focus(), 200);
             } else {
                 const data = doc.data();
+
                 // Populate stats
                 const pts = document.getElementById('statPoints');
                 const wsh = document.getElementById('statWashes');
                 if (pts) pts.textContent = (data.points || 0).toLocaleString();
                 if (wsh) wsh.textContent = (data.washes || 0).toLocaleString();
 
-                // Sync location pill on Near Me page
+                // Sync location
                 const locPill = document.getElementById('locationsPill');
                 if (locPill && data.location) locPill.textContent = data.location;
+                const locText = document.getElementById('userLocationText');
+                if (locText && data.location) locText.textContent = data.location;
 
                 if (!data.name) {
-                    // Profile exists but no name yet
-                    document.getElementById('phone-input-step').style.display = 'none';
-                    document.getElementById('otp-input-step').style.display = 'none';
-                    document.getElementById('name-input-step').style.display = 'block';
+                    showStep('name-input-step');
                 } else {
-                    // Fully onboarded user -> let them in!
                     this.currentUser.displayName = data.name;
                     document.querySelectorAll('.user-name').forEach(el => el.textContent = data.name);
                     if (typeof closeAuthModal === 'function') closeAuthModal();
@@ -252,32 +384,34 @@ const Auth = {
             }
         });
 
-        // Listen for their vehicles in real-time
+        // Real-time vehicles listener
         db.collection('customers').doc(uid).collection('vehicles').onSnapshot((snapshot) => {
             const vehicles = [];
-            snapshot.forEach(doc => {
-                vehicles.push({ id: doc.id, ...doc.data() });
-            });
-            window.cachedVehicles = vehicles; // Store globally for the UI
-            
-            // Re-render vehicles if the dashboard function exists
-            if (typeof renderVehicles === 'function') {
-                renderVehicles(vehicles);
-            }
+            snapshot.forEach(doc => vehicles.push({ id: doc.id, ...doc.data() }));
+            window.cachedVehicles = vehicles;
+            if (typeof renderVehicles === 'function') renderVehicles(vehicles);
         });
     },
 
-    // Add vehicle to cloud Database
+    // ─── Add Vehicle to Cloud ─────────────────────────────────────────────────
     addVehicle(vehicle) {
-        if (!this.currentUser) return;
+        if (!this.currentUser) return Promise.reject('Not logged in');
         return db.collection('customers').doc(this.currentUser.uid).collection('vehicles').add(vehicle);
     },
 
-    checkAuth() {
-        // Handled automatically via onAuthStateChanged now.
-    }
+    getUser() {
+        if (!this.currentUser) return null;
+        return {
+            isLoggedIn: true,
+            uid: this.currentUser.uid,
+            phone: this.currentUser.phoneNumber,
+            name: this.currentUser.displayName || 'WashPass User',
+            vehicles: window.cachedVehicles || []
+        };
+    },
+
+    checkAuth() { /* Handled by onAuthStateChanged */ }
 };
 
-// Auto-init on script load
 Auth.init();
-window.Auth = Auth; // Make global for other scripts
+window.Auth = Auth;

@@ -179,11 +179,11 @@
             </div>
         </section>
 
-        <!-- Welcome / Splash Section (First Timer) -->
+        <!-- Welcome / Splash Section -->
         <section id="welcome" class="app-section">
             <div class="splash-container">
                 <div class="splash-logo">
-                    <i class="fas fa-car-side fa-3x" style="color: var(--primary); margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4));"></i>
+                    <i class="fas fa-car-side fa-3x" style="color: var(--primary); margin-bottom: 20px; filter: drop-shadow(0 0 20px var(--primary-glow));"></i>
                     <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px;">WashPass <span style="color: var(--primary);">NG</span></h1>
                     <p style="color: var(--text-muted); margin-top: 10px; font-size: 16px; font-weight: 500;">Your Personal Car Concierge.</p>
                 </div>
@@ -192,6 +192,7 @@
                     <button class="pay-btn btn-pill" onclick="openAuthModal()" style="font-size: 18px; font-weight: 700; height: 56px;">
                         Enter phone number to begin
                     </button>
+                    <p style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 16px;">By continuing you agree to our <a href="#" style="color: var(--primary);">Terms of Service</a></p>
                 </div>
             </div>
         </section>
@@ -204,45 +205,73 @@
                     <button class="close-btn" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="modal-body" style="padding-top: 0;">
-                    
-                    <!-- Phone Input Step -->
-                    <div class="welcome-form" id="phone-input-step">
-                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">Welcome Code</h3>
-                        <p style="color: var(--text-muted); margin-bottom: 24px;">Enter your number to receive a secure login PIN via SMS.</p>
-                        
-                        <div class="input-group glass-input pill-input">
-                            <span style="font-weight: 700;">+234</span>
-                            <input type="tel" id="welcomePhone" placeholder="801 234 5678" maxlength="10">
-                        </div>
 
+                    <!-- Step 1: Phone Number (Smart Router) -->
+                    <div class="welcome-form" id="phone-input-step">
+                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">Welcome Back</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 24px;">Enter your phone number to continue.</p>
+                        <div class="input-group glass-input pill-input">
+                            <span style="font-weight: 700; white-space: nowrap;">+234</span>
+                            <input type="tel" id="welcomePhone" placeholder="801 234 5678" maxlength="10" inputmode="numeric">
+                        </div>
                         <div id="recaptcha-container" style="margin-top: 10px;"></div>
-                        <button class="pay-btn btn-pill" onclick="Auth.sendOTP()" style="margin-top: 24px;">Send PIN</button>
+                        <button class="pay-btn btn-pill" onclick="Auth.smartRoute()" style="margin-top: 24px;">Continue</button>
                     </div>
 
-                    <!-- OTP Input Step (Hidden initially) -->
-                    <div class="welcome-form" id="otp-input-step" style="display: none;">
-                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">Verify PIN</h3>
-                        <p style="color: var(--text-muted); margin-bottom: 24px;">Enter the 6-digit code we just sent.</p>
-                        
-                        <div class="input-group glass-input pill-input">
-                            <i class="fas fa-key" style="color: var(--text-muted); margin-right: 12px; padding-right: 12px; border-right: 1px solid rgba(255,255,255,0.1);"></i>
-                            <input type="number" id="otpCode" placeholder="123456" maxlength="6">
+                    <!-- Step 2A: Returning User — PIN Entry -->
+                    <div class="welcome-form" id="pin-entry-step" style="display: none;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                            <button onclick="Auth.restartLogin()" style="background: none; border: none; color: var(--primary); font-size: 20px; cursor: pointer;"><i class="fas fa-arrow-left"></i></button>
+                            <div>
+                                <h3 style="font-size: 24px; font-weight: 800; margin: 0;">Enter PIN</h3>
+                                <p style="color: var(--text-muted); font-size: 13px; margin: 0;">Use your 4-digit WashPass PIN</p>
+                            </div>
                         </div>
+                        <div class="input-group glass-input pill-input">
+                            <i class="fas fa-lock" style="color: var(--text-muted); margin-right: 12px; padding-right: 12px; border-right: 1px solid rgba(255,255,255,0.1);"></i>
+                            <input type="password" id="pinEntry" placeholder="••••" maxlength="4" inputmode="numeric" style="letter-spacing: 8px; font-size: 20px;">
+                        </div>
+                        <button class="pay-btn btn-pill" onclick="Auth.verifyPIN()" style="margin-top: 24px;">Login</button>
+                        <button class="btn btn-pill-outline" onclick="Auth.forgotPIN()" style="width: 100%; margin-top: 12px;">Forgot PIN? Use OTP instead</button>
+                    </div>
 
-                        <button class="pay-btn btn-pill" onclick="Auth.verifyOTP()" style="margin-top: 24px;">Verify & Login</button>
+                    <!-- Step 2B: OTP Verification -->
+                    <div class="welcome-form" id="otp-input-step" style="display: none;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                            <button onclick="Auth.restartLogin()" style="background: none; border: none; color: var(--primary); font-size: 20px; cursor: pointer;"><i class="fas fa-arrow-left"></i></button>
+                            <div>
+                                <h3 style="font-size: 24px; font-weight: 800; margin: 0;">Verify Code</h3>
+                                <p style="color: var(--text-muted); font-size: 13px; margin: 0;">Enter the 6-digit code we just sent</p>
+                            </div>
+                        </div>
+                        <div class="input-group glass-input pill-input">
+                            <i class="fas fa-comment-dots" style="color: var(--text-muted); margin-right: 12px; padding-right: 12px; border-right: 1px solid rgba(255,255,255,0.1);"></i>
+                            <input type="number" id="otpCode" placeholder="123456" maxlength="6" inputmode="numeric">
+                        </div>
+                        <button class="pay-btn btn-pill" onclick="Auth.verifyOTP()" style="margin-top: 24px;">Verify Code</button>
                         <button class="btn btn-pill-outline" onclick="Auth.restartLogin()" style="width: 100%; margin-top: 12px;">Cancel</button>
                     </div>
 
-                    <!-- Profile Name Step (Hidden initially) -->
+                    <!-- Step 3: New Users — Set PIN (after OTP) -->
+                    <div class="welcome-form" id="pin-setup-step" style="display: none;">
+                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">Secure Your Account</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 24px;">Create a 4-digit PIN for faster future logins. Your PIN is encrypted and never stored in plain text.</p>
+                        <div class="input-group glass-input pill-input">
+                            <i class="fas fa-shield-alt" style="color: var(--primary); margin-right: 12px; padding-right: 12px; border-right: 1px solid rgba(255,255,255,0.1);"></i>
+                            <input type="password" id="pinSetup" placeholder="••••" maxlength="4" inputmode="numeric" style="letter-spacing: 8px; font-size: 20px;">
+                        </div>
+                        <button class="pay-btn btn-pill" onclick="Auth.setupPIN()" style="margin-top: 24px;">Set PIN & Continue</button>
+                        <button class="btn btn-pill-outline" onclick="Auth.skipPIN()" style="width: 100%; margin-top: 12px;">Skip for now</button>
+                    </div>
+
+                    <!-- Step 4: Name Setup (New Users) -->
                     <div class="welcome-form" id="name-input-step" style="display: none;">
-                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">You're in!</h3>
+                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">You're in! 🎉</h3>
                         <p style="color: var(--text-muted); margin-bottom: 24px;">What should we call you?</p>
-                        
                         <div class="input-group glass-input pill-input">
                             <i class="fas fa-user" style="color: var(--text-muted); margin-right: 12px; padding-right: 12px; border-right: 1px solid rgba(255,255,255,0.1);"></i>
                             <input type="text" id="profileName" placeholder="e.g. Adebayo">
                         </div>
-
                         <button class="pay-btn btn-pill" onclick="Auth.saveProfileName()" style="margin-top: 24px;">Complete Setup</button>
                     </div>
 
