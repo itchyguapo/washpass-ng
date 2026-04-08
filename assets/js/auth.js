@@ -168,13 +168,9 @@ const Auth = {
         });
     },
 
-    // Coming Soon Alert
+    // Coming Soon Alert Pop Up
     comingSoon(feature) {
-        if (typeof showNotification === 'function') {
-            showNotification(feature + " is coming soon! 🚧", "info");
-        } else {
-            alert(feature + " is coming soon! 🚧");
-        }
+        alert("🚧 " + feature + " is coming soon! Our engineers are working hard.");
     },
 
     // Native GPS Location Request
