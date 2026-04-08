@@ -54,65 +54,132 @@
             </div>
 
             <!-- Subscriptions & Plans -->
-            <div class="section-title">
+            <div class="section-title" style="margin-top: 8px;">
                 <h3 style="font-weight: 800; font-size: 20px;">Wash Plans</h3>
-            </div>
-            
-            <div class="plans-container" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 20px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
-                
-                <!-- Single Wash Vector Card -->
-                <div class="plan-card glass-panel" style="min-width: 210px; scroll-snap-align: center; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; position: relative; overflow: hidden;">
-                    <div style="position: absolute; top: -10px; right: -10px; font-size: 80px; color: rgba(255,255,255,0.01);"><i class="fas fa-tint"></i></div>
-                    <div class="plan-icon" style="height: 40px; width: 40px; border-radius: 12px; background: rgba(0, 230, 118, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px;">
-                        <i class="fas fa-hand-sparkles"></i>
-                    </div>
-                    <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Single Premium Wash</h4>
-                    <p style="color: var(--text-muted); font-size: 11px; margin-bottom: 12px; min-height: 32px;">On-demand exterior wash & interior clean.</p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 16px; font-weight: 800; color: var(--white);">₦4,500</span>
-                        <button class="btn-pill" style="width: auto; padding: 8px 16px; font-size: 12px;" onclick="addToCart('Single Wash', 4500)">Add</button>
-                    </div>
-                </div>
-
-                <!-- Silver Plan Vector Card -->
-                <div class="plan-card glass-panel" style="min-width: 210px; scroll-snap-align: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(0, 230, 118, 0.2); border-radius: 20px; padding: 16px; position: relative; overflow: hidden;">
-                    <div style="position: absolute; top: -10px; right: -10px; font-size: 80px; color: rgba(0, 230, 118, 0.03);"><i class="fas fa-shield-alt"></i></div>
-                    <div class="plan-icon" style="height: 40px; width: 40px; border-radius: 12px; background: var(--primary); color: var(--bg-app); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; box-shadow: 0 0 10px var(--primary-glow);">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Silver Subscription</h4>
-                    <p style="color: var(--text-muted); font-size: 11px; margin-bottom: 12px; min-height: 32px;">2 Washes/month + Engine Bay detailing.</p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 16px; font-weight: 800; color: var(--white);">₦12,500<span style="font-size: 10px; color: var(--text-muted);">/mo</span></span>
-                        <button class="btn-pill-outline" style="width: auto; padding: 8px 16px; font-size: 12px; border-color: var(--primary); color: var(--primary);" onclick="addToCart('Silver Plan', 12500)">Subscribe</button>
-                    </div>
-                </div>
-
-                <!-- Gold Plan Vector Card -->
-                <div class="plan-card glass-panel" style="min-width: 210px; scroll-snap-align: center; background: rgba(255,255,255,0.02); border: 1px solid #F59E0B; border-radius: 20px; padding: 16px; position: relative; overflow: hidden;">
-                    <div style="position: absolute; top: -10px; right: -10px; font-size: 80px; color: rgba(245, 158, 11, 0.03);"><i class="fas fa-crown"></i></div>
-                    <div class="plan-icon" style="height: 40px; width: 40px; border-radius: 12px; background: #F59E0B; color: var(--bg-app); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Gold Subscription</h4>
-                    <p style="color: var(--text-muted); font-size: 11px; margin-bottom: 12px; min-height: 32px;">Unlimited Washes + Premium Waxing.</p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 16px; font-weight: 800; color: var(--white);">₦25,000<span style="font-size: 10px; color: var(--text-muted);">/mo</span></span>
-                        <button class="btn-pill-outline" style="width: auto; padding: 8px 16px; font-size: 12px; border-color: #F59E0B; color: #F59E0B;" onclick="addToCart('Gold Plan', 25000)">Subscribe</button>
-                    </div>
-                </div>
-
+                <span style="font-size: 12px; color: var(--text-muted);">Choose a plan</span>
             </div>
 
-            <!-- Coming Soon Detailing & Garage -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px; margin-bottom: 30px;">
-                <div onclick="Auth.comingSoon('Detailing')" class="category-card" style="background: rgba(255,255,255,0.02); border-radius: 20px; padding: 20px; text-align: center; border: 1px solid var(--card-border); cursor: pointer;">
-                    <i class="fas fa-tools" style="font-size: 32px; color: var(--text-muted); margin-bottom: 10px;"></i>
-                    <h4 style="font-size: 14px; font-weight: 700;">Detailing</h4>
+            <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px;">
+
+                <!-- Single Wash -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 18px; position: relative; overflow: hidden;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="height: 42px; width: 42px; border-radius: 14px; background: rgba(0,230,118,0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                                <i class="fas fa-hand-sparkles"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 16px; font-weight: 800; margin: 0;">Single Wash</h4>
+                                <span style="font-size: 11px; color: var(--text-muted);">Pay as you go</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 20px; font-weight: 800;">&#8358;4,500</span>
+                            <p style="font-size: 10px; color: var(--text-muted); margin: 0;">per wash</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-check" style="color: var(--primary); font-size: 11px; min-width: 14px;"></i> Full exterior pressure wash
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-check" style="color: var(--primary); font-size: 11px; min-width: 14px;"></i> Interior vacuum & wipe down
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-check" style="color: var(--primary); font-size: 11px; min-width: 14px;"></i> Tyre shine & window clean
+                        </div>
+                    </div>
+                    <button class="btn-pill" style="height: 44px; font-size: 14px;" onclick="addToCart('Single Wash', 4500)">Book Now &rarr;</button>
                 </div>
-                <div onclick="switchSection('profile')" class="category-card" style="background: rgba(255,255,255,0.02); border-radius: 20px; padding: 20px; text-align: center; border: 1px solid var(--card-border); cursor: pointer;">
-                    <i class="fas fa-warehouse" style="font-size: 32px; color: var(--primary); margin-bottom: 10px;"></i>
-                    <h4 style="font-size: 14px; font-weight: 700;">Garage</h4>
+
+                <!-- Silver Plan -->
+                <div style="background: rgba(0,230,118,0.03); border: 1px solid rgba(0,230,118,0.2); border-radius: 20px; padding: 18px; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 14px; right: 14px; background: rgba(0,230,118,0.15); color: var(--primary); font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;">Popular</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; padding-right: 60px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="height: 42px; width: 42px; border-radius: 14px; background: var(--primary); color: var(--bg-app); display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 0 12px var(--primary-glow);">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 16px; font-weight: 800; margin: 0;">Silver Plan</h4>
+                                <span style="font-size: 11px; color: var(--text-muted);">Monthly subscription</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: baseline; gap: 4px; margin-bottom: 14px;">
+                        <span style="font-size: 28px; font-weight: 800; color: var(--primary);">&#8358;12,500</span>
+                        <span style="font-size: 13px; color: var(--text-muted);">/month</span>
+                        <span style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">Save 30%</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-check" style="color: var(--primary); font-size: 11px; min-width: 14px;"></i> <strong style="color: white;">2 Full Washes</strong>&nbsp;per month
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-check" style="color: var(--primary); font-size: 11px; min-width: 14px;"></i> Engine bay rinse included
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-check" style="color: var(--primary); font-size: 11px; min-width: 14px;"></i> Priority booking at partner hubs
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-check" style="color: var(--primary); font-size: 11px; min-width: 14px;"></i> WashPass loyalty points
+                        </div>
+                    </div>
+                    <button class="btn-pill" style="height: 44px; font-size: 14px; background: var(--primary); color: #050505; font-weight: 800;" onclick="addToCart('Silver Plan', 12500)">Subscribe to Silver &rarr;</button>
+                </div>
+
+                <!-- Gold Plan -->
+                <div style="background: rgba(245,158,11,0.04); border: 1px solid rgba(245,158,11,0.3); border-radius: 20px; padding: 18px; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 14px; right: 14px; background: rgba(245,158,11,0.15); color: #F59E0B; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;">Best Value</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; padding-right: 80px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="height: 42px; width: 42px; border-radius: 14px; background: #F59E0B; color: #050505; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 0 12px rgba(245,158,11,0.4);">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 16px; font-weight: 800; margin: 0;">Gold Plan</h4>
+                                <span style="font-size: 11px; color: var(--text-muted);">Monthly subscription</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: baseline; gap: 4px; margin-bottom: 14px;">
+                        <span style="font-size: 28px; font-weight: 800; color: #F59E0B;">&#8358;25,000</span>
+                        <span style="font-size: 13px; color: var(--text-muted);">/month</span>
+                        <span style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">Save 55%</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-infinity" style="color: #F59E0B; font-size: 11px; min-width: 14px;"></i> <strong style="color: white;">Unlimited Washes</strong>&nbsp;every month
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-check" style="color: #F59E0B; font-size: 11px; min-width: 14px;"></i> Premium hand wax & polish
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-check" style="color: #F59E0B; font-size: 11px; min-width: 14px;"></i> Engine bay deep clean
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-check" style="color: #F59E0B; font-size: 11px; min-width: 14px;"></i> VIP priority booking
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <i class="fas fa-check" style="color: #F59E0B; font-size: 11px; min-width: 14px;"></i> 3x loyalty points on every wash
+                        </div>
+                    </div>
+                    <button class="btn-pill" style="height: 44px; font-size: 14px; background: #F59E0B; color: #050505; font-weight: 800;" onclick="addToCart('Gold Plan', 25000)">Subscribe to Gold &rarr;</button>
+                </div>
+
+            </div>
+
+            <!-- Quick Access: Detailing & Garage -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 30px;">
+                <div onclick="Auth.comingSoon('Detailing')" style="background: rgba(255,255,255,0.02); border-radius: 20px; padding: 18px; text-align: center; border: 1px solid var(--card-border); cursor: pointer; transition: all 0.2s;">
+                    <i class="fas fa-tools" style="font-size: 28px; color: var(--text-muted); margin-bottom: 8px;"></i>
+                    <h4 style="font-size: 13px; font-weight: 700;">Detailing</h4>
+                    <span style="font-size: 10px; color: var(--text-muted);">Coming Soon</span>
+                </div>
+                <div onclick="switchSection('profile')" style="background: rgba(0,230,118,0.03); border-radius: 20px; padding: 18px; text-align: center; border: 1px solid rgba(0,230,118,0.15); cursor: pointer; transition: all 0.2s;">
+                    <i class="fas fa-warehouse" style="font-size: 28px; color: var(--primary); margin-bottom: 8px;"></i>
+                    <h4 style="font-size: 13px; font-weight: 700;">My Garage</h4>
+                    <span style="font-size: 10px; color: var(--text-muted);">Manage cars</span>
                 </div>
             </div>
 
