@@ -165,7 +165,7 @@ Collections used in `assets/js/auth.js`:
 | Firebase Web config | Hardcoded in `assets/js/auth.js` | `apiKey`, `authDomain`, `projectId`, `storageBucket`, `messagingSenderId`, `appId`, `measurementId` |
 | `.env` | Not used | `.gitignore` includes `.env`; no build step reads env in this static project |
 | External CDNs | `dashboard.html` | Firebase compat 10.8.0, Font Awesome, Google Fonts, `html5-qrcode` |
-| PWA icons | `manifest.json` | `assets/images/pwa-icon.png` (referenced; verify file exists in deployment) |
+| PWA icons | `manifest.json` | `assets/images/pwa-icon.png` is **referenced but missing** from the repo (`assets/images/` only contains `nigeria-bridge.jpg` at audit time) — install/add icon asset before production. |
 | Service worker cache | `sw.js` | Fixed list of assets; **cache-buster query strings** on scripts in HTML are **not** mirrored in `ASSETS_TO_CACHE` (stale-cache risk during dev) |
 
 **Operational dependencies:** Firebase project `washpass-ng` with **Phone** auth enabled, **reCAPTCHA** / authorized domains for hosting URL, and **Firestore** with rules consistent with client usage (today: broad client writes would be required for current code paths, which is risky).
