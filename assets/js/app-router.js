@@ -5,10 +5,7 @@
 const state = {
     currentSection: 'home',
     cart: [],
-    user: Auth.getUser() || {
-        name: 'Ade',
-        location: 'Lekki Phase 1, Lagos'
-    }
+    user: Auth.getUser()
 };
 
 /**
@@ -26,10 +23,12 @@ function switchSection(sectionId) {
         section.classList.remove('active');
     });
 
-    // Handle Auth default for first timers
+    // Signed-in (Firebase phone session and/or PIN path) required for app sections
     const user = Auth.getUser();
-    if (!user || (!user.isLoggedIn && !user.name)) {
-        sectionId = 'welcome';
+    if (!user || !user.isLoggedIn) {
+        if (sectionId !== 'welcome') {
+            sectionId = 'welcome';
+        }
     }
 
     // Show target section
@@ -131,20 +130,18 @@ function renderCart() {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {
-    // Dynamic Header Data
     const user = Auth.getUser();
     if (user) {
-        document.querySelectorAll('.user-name').forEach(el => el.textContent = user.name || 'Ade');
+        document.querySelectorAll('.user-name').forEach(el => el.textContent = user.name || 'Welcome');
     }
 
-    // Check for initial hash or default logic
     const hash = window.location.hash.replace('#', '');
     const userLoggedIn = user && user.isLoggedIn;
-    
+
     if (hash && document.getElementById(hash) && hash !== 'welcome' && userLoggedIn) {
         switchSection(hash);
     } else if (!userLoggedIn) {
-        switchSection('welcome'); // The router will auto-redirect to welcome if not logged in
+        switchSection('welcome');
     } else {
         switchSection('home');
     }
@@ -152,6 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Native SPA Auth Modal Logic
 window.openAuthModal = function() {
+    if (typeof Auth !== 'undefined' && typeof Auth.prepareAuthModal === 'function') {
+        Auth.prepareAuthModal();
+    }
     const modal = document.getElementById('authModal');
     if (modal) modal.classList.add('active');
 };

@@ -42,22 +42,50 @@ function updateDashboardUI(user) {
     updateStats(user);
 }
 
-// Plan & Credits UI
+// Plan & Credits UI (Task 2: Linked to Firestore Listener)
 function updatePlanUI(user) {
-    const planNameEl = document.getElementById('plan-name');
-    const statusBadge = document.getElementById('plan-status');
-    const washCountEl = document.querySelector('.usage-stats .stat-item:nth-child(2) .stat-number');
-    
-    if (user.activePlan) {
-        planNameEl.textContent = user.activePlan.charAt(0).toUpperCase() + user.activePlan.slice(1) + " Plan";
-        statusBadge.textContent = 'Active';
-        statusBadge.className = 'status-badge active';
-        if (washCountEl) washCountEl.textContent = user.washCredits === 999 ? '∞' : user.washCredits;
+    const activeCard = document.getElementById('activeSubscriptionCard');
+    if (!activeCard) return;
+
+    if (user.subscription && user.subscription.status === 'active') {
+        activeCard.style.display = 'block';
+        
+        const planName = document.getElementById('userPlanName');
+        const planStatus = document.getElementById('userPlanStatus');
+        const washesLeft = document.getElementById('userWashesLeft');
+        const progress = document.getElementById('usageProgress');
+        const unlimitedText = document.getElementById('unlimitedText');
+        const usageContainer = document.getElementById('usageContainer');
+        const iconContainer = document.getElementById('planIconContainer');
+
+        const sub = user.subscription;
+        const planId = sub.planId || 'silver';
+        
+        planName.textContent = planId.charAt(0).toUpperCase() + planId.slice(1) + " Plan";
+        
+        if (planId === 'gold') {
+            unlimitedText.style.display = 'block';
+            usageContainer.style.display = 'none';
+            iconContainer.style.background = '#F59E0B'; // Gold theme
+            iconContainer.innerHTML = '<i class="fas fa-crown"></i>';
+            activeCard.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(15, 23, 42, 0.8))';
+            activeCard.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+        } else {
+            unlimitedText.style.display = 'none';
+            usageContainer.style.display = 'block';
+            iconContainer.style.background = 'var(--primary)'; // Silver/Primary theme
+            iconContainer.innerHTML = '<i class="fas fa-shield-alt"></i>';
+            activeCard.style.background = 'linear-gradient(135deg, rgba(0, 230, 118, 0.15), rgba(15, 23, 42, 0.8))';
+            activeCard.style.borderColor = 'rgba(0, 230, 118, 0.3)';
+
+            const remaining = sub.washesRemaining || 0;
+            const total = sub.totalWashes || 2; // Default for Silver
+            washesLeft.textContent = remaining;
+            const pct = (remaining / total) * 100;
+            progress.style.width = `${pct}%`;
+        }
     } else {
-        planNameEl.textContent = 'No Active Plan';
-        statusBadge.textContent = 'Inactive';
-        statusBadge.className = 'status-badge inactive';
-        if (washCountEl) washCountEl.textContent = user.washCredits || 0;
+        activeCard.style.display = 'none';
     }
 }
 
@@ -139,20 +167,22 @@ function renderHistory(history) {
     `).join('');
 }
 
-// Update Stats
+// Update Stats (Task 2: Real Data)
 function updateStats(user) {
-    const totalWashes = document.getElementById('totalWashes');
-    const waterSaved = document.getElementById('waterSaved');
-    const loyaltyPoints = document.getElementById('loyaltyPoints');
+    const totalWashes = document.getElementById('statWashes');
+    const waterSavedText = document.getElementById('waterSaved');
+    const loyaltyPoints = document.getElementById('statPoints');
     
-    if (totalWashes) totalWashes.textContent = user.history ? user.history.length : 0;
-    if (waterSaved) {
-        const saved = (user.history ? user.history.length : 0) * 150; // Simulate 150L per wash
-        waterSaved.textContent = saved + 'L';
+    const count = user.washes || 0;
+    if (totalWashes) totalWashes.textContent = count.toLocaleString();
+    
+    if (waterSavedText) {
+        const saved = count * 150; // Use the 150L per wash factor
+        waterSavedText.textContent = saved.toLocaleString() + 'L';
     }
+    
     if (loyaltyPoints) {
-        const points = (user.history ? user.history.length : 0) * 50; // Simulate 50pts per wash
-        loyaltyPoints.textContent = points;
+        loyaltyPoints.textContent = (user.points || 0).toLocaleString();
     }
 }
 
@@ -294,10 +324,7 @@ function showQRScanner() {
             (decodedText) => {
                 // Success: QR scanned
                 if (navigator.vibrate) navigator.vibrate([80, 40, 80]); // success haptic
-                showNotification('QR Code scanned! ✅', 'success');
-                closeQRScanner();
-                // TODO: process decodedText (e.g. validate wash token)
-                console.log('QR Code Data:', decodedText);
+                handleScannedHub(decodedText);
             },
             () => {
                 // Per-frame failure: normal, ignore silently
@@ -318,9 +345,82 @@ function closeQRScanner() {
         html5Qrcode.stop().then(() => {
             html5Qrcode.clear();
             html5Qrcode = null;
+            // Reset Views
+            document.getElementById('qrScannerView').style.display = 'block';
+            document.getElementById('qrSelectionView').style.display = 'none';
         }).catch(() => {
             html5Qrcode = null;
         });
+    }
+}
+
+/**
+ * Task 3: Handle the hub identification and show vehicle picker
+ */
+function handleScannedHub(hubId) {
+    console.log("[WashPass] Scanned Hub:", hubId);
+    
+    // Switch Views
+    const scannerView = document.getElementById('qrScannerView');
+    const selectionView = document.getElementById('qrSelectionView');
+    const vehicleList = document.getElementById('qrVehicleList');
+    
+    if (scannerView) scannerView.style.display = 'none';
+    if (selectionView) selectionView.style.display = 'block';
+    
+    // Stop camera now that we have the data
+    if (html5Qrcode) {
+        html5Qrcode.stop().then(() => { html5Qrcode = null; });
+    }
+
+    const vehicles = window.cachedVehicles || [];
+    if (vehicles.length === 0) {
+        vehicleList.innerHTML = `<p style="color: var(--error); font-size: 13px;">No vehicles found in your garage. Add one first!</p>`;
+        return;
+    }
+
+    vehicleList.innerHTML = vehicles.map(v => `
+        <button class="btn-pill" style="justify-content: space-between; padding: 0 20px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);" onclick="confirmRedemption('${v.id}', '${hubId}')">
+            <span>${v.make} ${v.model}</span>
+            <span style="font-family: monospace; color: var(--primary); font-size: 11px;">${v.plate}</span>
+        </button>
+    `).join('');
+}
+
+/**
+ * Task 3: Execute the final redemption
+ */
+async function confirmRedemption(vehicleId, hubId) {
+    const list = document.getElementById('qrVehicleList');
+    const processing = document.getElementById('qrProcessingState');
+    
+    if (list) list.style.display = 'none';
+    if (processing) processing.style.display = 'block';
+
+    try {
+        await Auth.redeemWash(vehicleId, 'Standard');
+        
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+        showNotification('Wash Redeemed Successfully! 🚿✨', 'success');
+        
+        // Final Success State UI
+        const selectionView = document.getElementById('qrSelectionView');
+        if (selectionView) {
+            selectionView.innerHTML = `
+                <div style="color: var(--primary); font-size: 64px; margin-bottom: 20px;">
+                    <i class="fas fa-check-double"></i>
+                </div>
+                <h3 style="font-weight: 800; font-size: 24px; color: white;">Verified!</h3>
+                <p style="color: var(--text-muted); font-size: 14px;">Your wash is authorized. Enjoy your shine!</p>
+            `;
+        }
+
+        setTimeout(() => closeQRScanner(), 3000);
+    } catch (err) {
+        console.error("[WashPass] Redemption failed:", err);
+        showNotification(err.message || 'Redemption failed', 'error');
+        if (list) list.style.display = 'flex';
+        if (processing) processing.style.display = 'none';
     }
 }
 

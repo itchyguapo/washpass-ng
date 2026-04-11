@@ -24,6 +24,20 @@
 </head>
 <body>
     <div class="app-shell">
+        <!-- Welcome Section (Landing Page) -->
+        <section id="welcome" class="app-section">
+            <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; background: radial-gradient(circle at top, rgba(0, 230, 118, 0.1), transparent);">
+                <div style="height: 80px; width: 80px; border-radius: 24px; background: rgba(0,230,118,0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 30px;">
+                    <i class="fas fa-car-side" style="color: var(--primary); font-size: 32px;"></i>
+                </div>
+                <h1 style="font-size: 36px; font-weight: 800; line-height: 1.1; margin-bottom: 20px;">Premium Car Care, <br><span style="color: var(--primary);">Simplified.</span></h1>
+                <p style="color: var(--text-muted); font-size: 16px; margin-bottom: 40px; line-height: 1.6;">The ultimate wash subscription for your vehicles. Join the elite WashPass community today.</p>
+                <button class="btn-pill" style="height: 56px; padding: 0 40px; font-size: 16px; font-weight: 700;" onclick="openAuthModal()">
+                    Get Started &rarr;
+                </button>
+            </div>
+        </section>
+
         <!-- Home Section -->
         <section id="home" class="app-section active">
             <header class="app-header">
@@ -54,6 +68,33 @@
             <div class="promo-card" style="background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6)), url('assets/images/midnight_promo.png');">
                 <h3>Up To 20% Off On First Order</h3>
                 <button class="btn">Book Now</button>
+            </div>
+
+            <!-- Active Subscription Card (Task 2) -->
+            <div id="activeSubscriptionCard" style="display: none; margin-bottom: 24px; background: linear-gradient(135deg, rgba(0, 230, 118, 0.15), rgba(15, 23, 42, 0.8)); border: 1px solid rgba(0, 230, 118, 0.3); border-radius: 20px; padding: 20px; position: relative; overflow: hidden;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                    <div>
+                        <h4 id="userPlanName" style="font-size: 18px; font-weight: 800; margin: 0; color: white;">Plan</h4>
+                        <p id="userPlanStatus" style="font-size: 11px; color: var(--primary); font-weight: 600; margin-top: 2px;">ACTIVE MEMBERSHIP</p>
+                    </div>
+                    <div id="planIconContainer" style="height: 48px; width: 48px; border-radius: 14px; background: var(--primary); color: var(--bg-app); display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                </div>
+                
+                <div id="usageContainer">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
+                        <span style="font-size: 13px; color: var(--text-muted);">Washes Remaining</span>
+                        <span id="userWashesLeft" style="font-size: 20px; font-weight: 800; color: white;">0</span>
+                    </div>
+                    <div style="height: 6px; width: 100%; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
+                        <div id="usageProgress" style="height: 100%; width: 0%; background: var(--primary); box-shadow: 0 0 10px var(--primary-glow); transition: width 0.5s ease;"></div>
+                    </div>
+                </div>
+
+                <div id="unlimitedText" style="display: none; font-size: 14px; font-weight: 700; color: var(--primary); letter-spacing: 0.5px;">
+                    <i class="fas fa-infinity"></i> UNLIMITED WASHES ENABLED
+                </div>
             </div>
 
             <!-- Subscriptions & Plans -->
@@ -276,73 +317,73 @@
                 </div>
                 <div class="modal-body" style="padding-top: 0;">
 
-                    <!-- Step 1: Phone Number (Smart Router) -->
+                    <!-- Step 1: Phone -->
                     <div class="welcome-form" id="phone-input-step">
-                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">Welcome Back</h3>
-                        <p style="color: var(--text-muted); margin-bottom: 24px;">Enter your phone number to continue.</p>
+                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">Welcome</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 24px;">Enter your Nigerian mobile number. We will text you a code, or ask for your PIN if you already use WashPass.</p>
                         <div class="input-group glass-input pill-input">
                             <span style="font-weight: 700; white-space: nowrap;">+234</span>
                             <input type="tel" id="welcomePhone" placeholder="801 234 5678" maxlength="10" inputmode="numeric">
                         </div>
                         <div id="recaptcha-container" style="margin-top: 10px;"></div>
-                        <button class="pay-btn btn-pill" onclick="Auth.smartRoute()" style="margin-top: 24px;">Continue</button>
+                        <button type="button" class="pay-btn btn-pill" onclick="Auth.smartRoute(event)" style="margin-top: 24px;">Continue</button>
                     </div>
 
-                    <!-- Step 2A: Returning User — PIN Entry -->
+                    <!-- Step 2A: PIN (returning) -->
                     <div class="welcome-form" id="pin-entry-step" style="display: none;">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-                            <button onclick="Auth.restartLogin()" style="background: none; border: none; color: var(--primary); font-size: 20px; cursor: pointer;"><i class="fas fa-arrow-left"></i></button>
+                            <button type="button" onclick="Auth.restartLogin()" style="background: none; border: none; color: var(--primary); font-size: 20px; cursor: pointer;"><i class="fas fa-arrow-left"></i></button>
                             <div>
                                 <h3 style="font-size: 24px; font-weight: 800; margin: 0;">Enter PIN</h3>
-                                <p style="color: var(--text-muted); font-size: 13px; margin: 0;">Use your 4-digit WashPass PIN</p>
+                                <p style="color: var(--text-muted); font-size: 13px; margin: 0;">Your 6-digit WashPass PIN</p>
                             </div>
                         </div>
                         <div class="input-group glass-input pill-input">
                             <i class="fas fa-lock" style="color: var(--text-muted); margin-right: 12px; padding-right: 12px; border-right: 1px solid rgba(255,255,255,0.1);"></i>
-                            <input type="password" id="pinEntry" placeholder="••••" maxlength="4" inputmode="numeric" style="letter-spacing: 8px; font-size: 20px;">
+                            <input type="password" id="pinEntry" placeholder="••••••" maxlength="6" inputmode="numeric" pattern="[0-9]*" style="letter-spacing: 6px; font-size: 18px;">
                         </div>
-                        <button class="pay-btn btn-pill" onclick="Auth.verifyPIN()" style="margin-top: 24px;">Login</button>
-                        <button class="btn btn-pill-outline" onclick="Auth.forgotPIN()" style="width: 100%; margin-top: 12px;">Forgot PIN? Use OTP instead</button>
+                        <button type="button" class="pay-btn btn-pill" onclick="Auth.verifyPIN(event)" style="margin-top: 24px;">Continue</button>
+                        <button type="button" class="btn btn-pill-outline" onclick="Auth.forgotPIN()" style="width: 100%; margin-top: 12px;">Forgot PIN? Use SMS code</button>
                     </div>
 
-                    <!-- Step 2B: OTP Verification -->
+                    <!-- Step 2B: OTP -->
                     <div class="welcome-form" id="otp-input-step" style="display: none;">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-                            <button onclick="Auth.restartLogin()" style="background: none; border: none; color: var(--primary); font-size: 20px; cursor: pointer;"><i class="fas fa-arrow-left"></i></button>
+                            <button type="button" onclick="Auth.restartLogin()" style="background: none; border: none; color: var(--primary); font-size: 20px; cursor: pointer;"><i class="fas fa-arrow-left"></i></button>
                             <div>
-                                <h3 style="font-size: 24px; font-weight: 800; margin: 0;">Verify Code</h3>
-                                <p style="color: var(--text-muted); font-size: 13px; margin: 0;">Enter the 6-digit code we just sent</p>
+                                <h3 style="font-size: 24px; font-weight: 800; margin: 0;">Enter code</h3>
+                                <p style="color: var(--text-muted); font-size: 13px; margin: 0;">6-digit code from SMS</p>
                             </div>
                         </div>
                         <div class="input-group glass-input pill-input">
                             <i class="fas fa-comment-dots" style="color: var(--text-muted); margin-right: 12px; padding-right: 12px; border-right: 1px solid rgba(255,255,255,0.1);"></i>
-                            <input type="number" id="otpCode" placeholder="123456" maxlength="6" inputmode="numeric">
+                            <input type="text" id="otpCode" placeholder="123456" maxlength="6" inputmode="numeric" pattern="[0-9]*">
                         </div>
-                        <button class="pay-btn btn-pill" onclick="Auth.verifyOTP()" style="margin-top: 24px;">Verify Code</button>
-                        <button class="btn btn-pill-outline" onclick="Auth.restartLogin()" style="width: 100%; margin-top: 12px;">Cancel</button>
+                        <button type="button" class="pay-btn btn-pill" onclick="Auth.verifyOTP(event)" style="margin-top: 24px;">Verify</button>
+                        <button type="button" class="btn btn-pill-outline" onclick="Auth.restartLogin()" style="width: 100%; margin-top: 12px;">Cancel</button>
                     </div>
 
-                    <!-- Step 3: New Users — Set PIN (after OTP) -->
+                    <!-- Step 3: PIN setup (new, after first OTP) -->
                     <div class="welcome-form" id="pin-setup-step" style="display: none;">
-                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">Secure Your Account</h3>
-                        <p style="color: var(--text-muted); margin-bottom: 24px;">Create a 4-digit PIN for faster future logins. Your PIN is encrypted and never stored in plain text.</p>
+                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">Create a PIN</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 24px;">Choose a 6-digit PIN for faster sign-in next time (optional). We only store a secure hash.</p>
                         <div class="input-group glass-input pill-input">
                             <i class="fas fa-shield-alt" style="color: var(--primary); margin-right: 12px; padding-right: 12px; border-right: 1px solid rgba(255,255,255,0.1);"></i>
-                            <input type="password" id="pinSetup" placeholder="••••" maxlength="4" inputmode="numeric" style="letter-spacing: 8px; font-size: 20px;">
+                            <input type="password" id="pinSetup" placeholder="••••••" maxlength="6" inputmode="numeric" pattern="[0-9]*" style="letter-spacing: 6px; font-size: 18px;">
                         </div>
-                        <button class="pay-btn btn-pill" onclick="Auth.setupPIN()" style="margin-top: 24px;">Set PIN & Continue</button>
-                        <button class="btn btn-pill-outline" onclick="Auth.skipPIN()" style="width: 100%; margin-top: 12px;">Skip for now</button>
+                        <button type="button" class="pay-btn btn-pill" onclick="Auth.setupPIN(event)" style="margin-top: 24px;">Save PIN</button>
+                        <button type="button" class="btn btn-pill-outline" onclick="Auth.skipPIN()" style="width: 100%; margin-top: 12px;">Skip for now</button>
                     </div>
 
-                    <!-- Step 4: Name Setup (New Users) -->
+                    <!-- Step 4: Name -->
                     <div class="welcome-form" id="name-input-step" style="display: none;">
-                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">You're in! 🎉</h3>
+                        <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">You’re in</h3>
                         <p style="color: var(--text-muted); margin-bottom: 24px;">What should we call you?</p>
                         <div class="input-group glass-input pill-input">
                             <i class="fas fa-user" style="color: var(--text-muted); margin-right: 12px; padding-right: 12px; border-right: 1px solid rgba(255,255,255,0.1);"></i>
-                            <input type="text" id="profileName" placeholder="e.g. Adebayo">
+                            <input type="text" id="profileName" placeholder="e.g. Adebayo" autocomplete="name">
                         </div>
-                        <button class="pay-btn btn-pill" onclick="Auth.saveProfileName()" style="margin-top: 24px;">Complete Setup</button>
+                        <button type="button" class="pay-btn btn-pill" onclick="Auth.saveProfileName(event)" style="margin-top: 24px;">Continue</button>
                     </div>
 
                 </div>
@@ -468,7 +509,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body" style="padding-bottom: 20px; position: relative;">
+            <div id="qrScannerView" class="modal-body" style="padding-bottom: 20px; position: relative;">
                 <!-- Camera feed -->
                 <div style="position: relative; border-radius: 20px; overflow: hidden;">
                     <div id="qr-reader" style="width: 100%; border-radius: 16px; overflow: hidden; background: black;"></div>
@@ -487,6 +528,24 @@
                 <div style="text-align: center; margin-top: 20px;">
                     <p style="color: var(--primary); font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">Scanning for QR Code...</p>
                     <p style="color: var(--text-muted); font-size: 11px; margin-top: 6px;">Point camera at the WashPass QR code</p>
+                </div>
+            </div>
+
+            <!-- Task 3: Selection View (Hidden by default) -->
+            <div id="qrSelectionView" class="modal-body" style="display: none; padding: 20px; text-align: center;">
+                <div id="qrSuccessAnimation" style="margin-bottom: 20px; color: var(--primary); font-size: 48px;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 style="font-weight: 800; font-size: 22px; margin-bottom: 8px;">Hub Verified</h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Confirm which vehicle is at the bay:</p>
+                
+                <div id="qrVehicleList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div id="qrProcessingState" style="display: none;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--primary); margin-bottom: 12px;"></i>
+                    <p style="font-size: 13px; font-weight: 600; color: var(--primary);">PROCESSING REDEMPTION...</p>
                 </div>
             </div>
         </div>
