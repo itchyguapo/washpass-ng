@@ -309,13 +309,13 @@ const Auth = {
 
         // Vehicles Listener (Subcollection)
         this._detachVehicleListener();
-            this._vehicleUnsub = db.collection('customers').doc(uid).collection('vehicles').onSnapshot((snapshot) => {
-                const vehicles = [];
-                snapshot.forEach((d) => vehicles.push({ id: d.id, ...d.data() }));
-                window.cachedVehicles = vehicles;
-                if (typeof renderVehicles === 'function') renderVehicles(vehicles);
-            });
-        }
+        this._vehicleUnsub = db.collection('customers').doc(uid).collection('vehicles').onSnapshot((snapshot) => {
+            const vehicles = [];
+            snapshot.forEach((d) => vehicles.push({ id: d.id, ...d.data() }));
+            window.cachedVehicles = vehicles;
+            if (typeof renderVehicles === 'function') renderVehicles(vehicles);
+        });
+
         if (typeof closeAuthModal === 'function') closeAuthModal();
         if (typeof switchSection === 'function') switchSection('home');
     },
