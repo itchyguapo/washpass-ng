@@ -279,41 +279,38 @@ const Auth = {
     async loadProfileAndEnter(uid) {
         if (!uid) return;
 
-        // Task 2: Real-time listener for Customer Profile (Subscription, Points, Name)
+        // Subscribe to profile changes
         this._detachProfileListener();
         this._profileUnsub = db.collection('customers').doc(uid).onSnapshot((doc) => {
             if (!doc.exists) return;
             const data = doc.data();
+            this.userData = data;
 
-            // Update UI Globals
-            document.querySelectorAll('.user-name').forEach((el) => {
+            // Sync UI items
+            document.querySelectorAll('.user-name').forEach(el => {
                 el.textContent = data.name || 'Welcome';
             });
 
-            // Update Stats
             const pts = document.getElementById('statPoints');
-            const wsh = document.getElementById('statWashes');
             if (pts) pts.textContent = (data.points || 0).toLocaleString();
-            
-            // Link to Dashboard-specific plan UI
-            if (typeof updatePlanUI === 'function') {
-                updatePlanUI(data);
-            }
+
+            if (typeof updatePlanUI === 'function') updatePlanUI(data);
 
             const locText = document.getElementById('userLocationText');
             if (locText && data.location) locText.textContent = data.location;
-            
-            // Cache current state
-            this.userData = data;
+        }, (err) => {
+            console.error("[Auth] Profile listen error:", err);
         });
 
-        // Vehicles Listener (Subcollection)
+        // Vehicles Listener
         this._detachVehicleListener();
         this._vehicleUnsub = db.collection('customers').doc(uid).collection('vehicles').onSnapshot((snapshot) => {
             const vehicles = [];
-            snapshot.forEach((d) => vehicles.push({ id: d.id, ...d.data() }));
+            snapshot.forEach(d => vehicles.push({ id: d.id, ...d.data() }));
             window.cachedVehicles = vehicles;
             if (typeof renderVehicles === 'function') renderVehicles(vehicles);
+        }, (err) => {
+            console.error("[Auth] Vehicles listen error:", err);
         });
 
         if (typeof closeAuthModal === 'function') closeAuthModal();

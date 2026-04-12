@@ -5,11 +5,11 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // Check authentication
-    Auth.checkAuth();
-    
-    // Initial UI Update
-    const user = Auth.getUser();
-    updateDashboardUI(user);
+    if (typeof Auth !== 'undefined') {
+        Auth.checkAuth();
+        const user = Auth.getUser();
+        updateDashboardUI(user);
+    }
     
     // Handle "Add Vehicle" button from navigation/welcome
     const addVehicleButtons = document.querySelectorAll('[onclick*="Add Vehicle"], .btn-outline i.fa-plus').forEach(btn => {
@@ -223,8 +223,12 @@ function handleAddVehicle(event) {
         color: document.getElementById('vehicleColor').value
     };
     
-    toggleCarLoader(true, "Parking in cloud garage...");
-    
+    if (typeof Auth === 'undefined') {
+        toggleCarLoader(false);
+        showNotification("Auth module not loaded.", "error");
+        return;
+    }
+
     Auth.addVehicle(vehicle).then(() => {
         toggleCarLoader(false);
         closeAddVehicleModal();
@@ -315,6 +319,12 @@ function showQRScanner() {
     // Small delay to let the modal animate in before starting camera
     setTimeout(() => {
         if (html5Qrcode) return; // already running
+
+        if (typeof Html5Qrcode === 'undefined') {
+            showNotification('Scanner module not loaded.', 'error');
+            closeQRScanner();
+            return;
+        }
 
         html5Qrcode = new Html5Qrcode('qr-reader');
 
@@ -424,9 +434,12 @@ async function confirmRedemption(vehicleId, hubId) {
     }
 }
 
-function handleLogout() {
     toggleCarLoader(true, "Parking and logging out...");
     setTimeout(() => {
-        Auth.logout();
+        if (typeof Auth !== 'undefined') {
+            Auth.logout();
+        } else {
+            window.location.reload();
+        }
     }, 1500);
 }

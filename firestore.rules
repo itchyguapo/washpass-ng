@@ -9,13 +9,24 @@ service cloud.firestore {
       }
     }
 
-    // PIN routing reads happen before Firebase Auth (smartRoute). Writes only after OTP (authenticated).
+    // PIN routing reads happen before Firebase Auth (smartRoute). 
     match /phone_index/{phoneKey} {
       allow read: if true;
-      allow create, update: if request.auth != null
-        && request.resource.data.keys().hasAll(['uid', 'pinHash', 'hasPin'])
+      // Allow creation only if the UID matches the auth UID and document doesn't exist
+      allow create: if request.auth != null 
+        && request.resource.data.uid == request.auth.uid
+        && !exists(/databases/$(database)/documents/phone_index/$(phoneKey));
+      // Allow update only if the UID matches the existing UID
+      allow update: if request.auth != null 
+        && resource.data.uid == request.auth.uid
         && request.resource.data.uid == request.auth.uid;
       allow delete: if false;
+    }
+
+    // Public wash logs for audit (read-only for authenticated users)
+    match /wash_logs/{logId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null; // Typically created via batch/SDK
     }
   }
 }

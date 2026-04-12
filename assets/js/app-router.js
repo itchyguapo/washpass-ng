@@ -5,7 +5,7 @@
 const state = {
     currentSection: 'home',
     cart: [],
-    user: Auth.getUser()
+    user: (typeof Auth !== 'undefined' ? Auth.getUser() : null)
 };
 
 /**
@@ -24,7 +24,7 @@ function switchSection(sectionId) {
     });
 
     // Signed-in (Firebase phone session and/or PIN path) required for app sections
-    const user = Auth.getUser();
+    const user = (typeof Auth !== 'undefined' ? Auth.getUser() : null);
     if (!user || !user.isLoggedIn) {
         if (sectionId !== 'welcome') {
             sectionId = 'welcome';
@@ -130,7 +130,7 @@ function renderCart() {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {
-    const user = Auth.getUser();
+    const user = (typeof Auth !== 'undefined' ? Auth.getUser() : null);
     if (user) {
         document.querySelectorAll('.user-name').forEach(el => el.textContent = user.name || 'Welcome');
     }
