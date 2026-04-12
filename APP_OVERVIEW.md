@@ -12,6 +12,7 @@ This document reflects the codebase audit (STEP 0) plus **ongoing updates after 
 | **PIN length** | **6 digits** (numeric only). Accounts that previously saved a **4-digit** hash must use **“Forgot PIN? Use SMS code”** once, then set a new **6-digit** PIN (old hash will not match). |
 | **Apr 11, 2026** | **Task 2 Complete**: Subscription & Wash Log logic implemented. Dashboard is now synced to live Firestore data (wishes remaining, plan status, points). |
 | **Apr 12, 2026** | **Task 3 Complete**: QR Scanner HUD is now integrated with the `redeemWash` API. Multi-vehicle "Scan then Select" flow is active. |
+| **Apr 12, 2026** | **Audit & Stabilization**: Resolved critical syntax error in `auth.js`. Hardened `firestore.rules` for `phone_index` protection. Optimized `sw.js` with Network-First strategy and registered SW in all dashboards. Added defensive checks to router and dashboard logic. |
 
 ---
 
@@ -51,8 +52,8 @@ flowchart TB
 | Customer app shell | `dashboard.html` — sections toggled as a pseudo-SPA; hash routing in `app-router.js` |
 | Auth & customer data (partial) | Firebase 10.8 compat: `firebase-app`, `firebase-auth`, `firebase-firestore` in `dashboard.html` |
 | QR scanning (customer) | `html5-qrcode` (CDN); scan handler is stubbed |
-| PWA | `manifest.json`, `sw.js` (network-first fetch, asset cache) |
-| Admin / Partner | Separate HTML pages; **no Firebase, no auth, no backend** — simulated metrics and flows |
+| PWA | `manifest.json`, `sw.js` (Network-First fetch for logic/HTML, stale-while-revalidate for assets) |
+| Admin / Partner | Separate HTML pages; **PWA-enabled** (Service Worker registered), simulated metrics and flows |
 
 **Data flow (customer app):** **Phone (+234…)** → Firebase **Phone Auth** (SMS OTP + reCAPTCHA) → Firestore **`customers/{uid}`** and **`customers/{uid}/vehicles`**, plus **`phone_index/{digits}`** for PIN hash / `hasPin` / `uid` linkage — all from the **browser**. Firebase **refreshes ID tokens** in the SDK (no custom JWT server in this repo). Admin and partner dashboards do not read or write Firestore.
 
@@ -194,7 +195,7 @@ Collections used in `assets/js/auth.js`:
 | External CDNs | `dashboard.html` | Firebase compat 10.8.0, Font Awesome, Google Fonts, `html5-qrcode` |
 | PWA icons | `manifest.json` | `assets/images/pwa-icon.png` is **referenced but missing** from the repo (`assets/images/` only contains `nigeria-bridge.jpg` at audit time) — install/add icon asset before production. |
 | Service worker cache | `sw.js` | Fixed list of assets; **cache-buster query strings** on scripts in HTML are **not** mirrored in `ASSETS_TO_CACHE` (stale-cache risk during dev) |
-| Firestore rules (reference) | `firestore.rules` + `firebase.json` | Locks **`customers/{uid}`** + **`vehicles`** to `request.auth.uid`. **`phone_index`**: **world-readable** docs (required so the app can check `hasPin` before SMS); **create/update** only when `request.resource.data.uid == request.auth.uid` (PIN save after OTP). Deploy: `firebase deploy --only firestore:rules`. |
+| Firestore rules (reference) | `firestore.rules` + `firebase.json` | Locks **`customers/{uid}`** + **`vehicles`** to `request.auth.uid`. **`phone_index`**: **world-readable**; **create/update** strictly limited to the matching `uid` to prevent index hijacking. Deploy: `firebase deploy --only firestore:rules`. |
 
 **Operational dependencies:** Firebase project `washpass-ng` with **Phone** authentication enabled, **reCAPTCHA** / authorized domains, and deployed **Firestore rules** matching `firestore.rules` (per-user `customers` + `vehicles`).
 
